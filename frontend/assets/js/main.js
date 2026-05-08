@@ -398,3 +398,64 @@ function renderRecCards(idx) {
   `;
   container.appendChild(action);
 }
+
+/* ============================================
+   LIVE PREDICTION DARI VERCEL API (DITAMBAHKAN DI SINI)
+   ============================================ */
+document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const resultContainer = document.getElementById('predictionResult');
+  resultContainer.style.display = 'block';
+  resultContainer.innerHTML = '<span style="color: var(--g-mid); font-family: var(--font-mono);">Memproses data ke Vercel... ⏳</span>';
+
+  // 1. Ambil data dari form input
+  const payload = {
+    "Usage_kWh": parseFloat(document.getElementById('in_Usage_kWh').value),
+    "Lagging_Current_Reactive.Power_kVarh": parseFloat(document.getElementById('in_Lagging_kVarh').value),
+    "Leading_Current_Reactive_Power_kVarh": parseFloat(document.getElementById('in_Leading_kVarh').value),
+    "CO2(tCO2)": parseFloat(document.getElementById('in_CO2').value),
+    "Lagging_Current_Power_Factor": parseFloat(document.getElementById('in_Lagging_PF').value),
+    "Leading_Current_Power_Factor": parseFloat(document.getElementById('in_Leading_PF').value),
+    "NSM": parseFloat(document.getElementById('in_NSM').value)
+  };
+
+  // 2. GANTI URL INI DENGAN LINK VERCEL KAMU!
+  const API_URL = "https://NAMA-PROJECT-VERCEL-KAMU.vercel.app/predict";
+
+  try {
+    // 3. Tembak (fetch) API Vercel
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    // 4. Tampilkan Hasilnya
+    if (data.status === "success") {
+      let rulesHTML = "";
+      if(data.rules_applied && data.rules_applied.length > 0) {
+          rulesHTML = "<ul style='margin-top: 8px; padding-left: 20px;'>" + data.rules_applied.map(rule => `<li><b>Prioritas ${rule.priority}</b>: Fitur ${rule.feature}</li>`).join("") + "</ul>";
+      } else {
+          rulesHTML = "<p style='margin-top: 8px; font-style: italic; color: #666;'>Tidak ada pelanggaran batas rule spesifik.</p>";
+      }
+
+      resultContainer.innerHTML = `
+        <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--g); font-family: var(--font-serif); font-size: 24px;">✅ Prediksi Berhasil!</h3>
+        <p style="margin: 4px 0;">Data Anda masuk ke: <b>${data.cluster_name}</b> (Cluster ${data.cluster_id})</p>
+        <p style="margin: 12px 0 4px 0; font-weight: 500;">Rekomendasi Aturan CBF:</p>
+        ${rulesHTML}
+      `;
+    } else {
+      resultContainer.innerHTML = `<p style="color: var(--r); font-family: var(--font-mono);">Error API: ${data.message}</p>`;
+    }
+
+  } catch (error) {
+    console.error("Gagal koneksi ke API:", error);
+    resultContainer.innerHTML = `<p style="color: var(--r); font-family: var(--font-mono);">Gagal terhubung ke Vercel. Pastikan link API benar dan server menyala.</p>`;
+  }
+});
