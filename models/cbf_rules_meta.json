@@ -1,0 +1,34 @@
+[
+  {
+    "feature": "Lagging_Current_Power_Factor",
+    "priority": 1
+  },
+  {
+    "feature": "Leading_Current_Power_Factor",
+    "priority": 1
+  },
+  {
+    "feature": "Usage_kWh",
+    "priority": 1
+  },
+  {
+    "feature": "CO2(tCO2)",
+    "priority": 2
+  },
+  {
+    "feature": "Lagging_Current_Reactive.Power_kVarh",
+    "priority": 2
+  },
+  {
+    "feature": "Leading_Current_Reactive_Power_kVarh",
+    "priority": 3
+  },
+  {
+    "feature": "NSM",
+    "priority": 2
+  },
+  {
+    "feature": "is_weekend",
+    "priority": 3
+  }
+]

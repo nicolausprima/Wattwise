@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steel Energy Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/frontend/assets/css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-mark">◆</div>
+      <span>Wattwise</span>
+    </div>
+    <div class="nav-links">
+      <a href="#recommendations">CBF Rec.</a>
+      <a href="#clusters">Seg. Profile</a>
+      <a href="#comparison">Feat. Compare</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-chip">KMeans K=3 · Content-Based Filtering · Steel Industry Dataset</div>
+    <h1 class="hero-title">Energy Efficiency<br><em>Intelligence</em></h1>
+    <p class="hero-sub">Sistem rekomendasi efisiensi energi berbasis gap fitur aktual vs profil ideal.<br>Rekomendasi diturunkan dari data — bukan hardcoded.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-n">8.600+</div><div class="hs-l">Total Records</div></div>
+      <div class="hs-div"></div>
+      <div class="hs"><div class="hs-n">3</div><div class="hs-l">Clusters</div></div>
+      <div class="hs-div"></div>
+      <div class="hs"><div class="hs-n">0.47</div><div class="hs-l">Silhouette Score</div></div>
+      <div class="hs-div"></div>
+      <div class="hs"><div class="hs-n">8</div><div class="hs-l">CBF Rules</div></div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: RECOMMENDATIONS — HERO SECTION (TOP) -->
+  <section class="rec-section" id="recommendations">
+
+    <div class="rec-intro">
+      <div class="section-label" style="color:var(--g)">01 — Rekomendasi CBF</div>
+      <h2 class="rec-main-title">Sistem Rekomendasi<br><em>Data-Driven</em></h2>
+      <p class="rec-main-sub">Rekomendasi diturunkan dari gap fitur aktual vs ideal profile melalui 8 CBF rules — bukan teks hardcoded per cluster.</p>
+
+      <div class="method-strip">
+        <div class="ms-item">
+          <span class="ms-num">①</span>
+          <div><div class="ms-title">Ideal Profile</div><div class="ms-desc">Cluster Usage_kWh terendah jadi baseline</div></div>
+        </div>
+        <div class="ms-sep">→</div>
+        <div class="ms-item">
+          <span class="ms-num">②</span>
+          <div><div class="ms-title">Cosine Similarity</div><div class="ms-desc">Record vs centroid tiap cluster</div></div>
+        </div>
+        <div class="ms-sep">→</div>
+        <div class="ms-item">
+          <span class="ms-num">③</span>
+          <div><div class="ms-title">Gap Scoring</div><div class="ms-desc">Selisih aktual vs ideal, diurutkan</div></div>
+        </div>
+        <div class="ms-sep">→</div>
+        <div class="ms-item">
+          <span class="ms-num">④</span>
+          <div><div class="ms-title">Rule Evaluation</div><div class="ms-desc">8 rules, hanya yang terpenuhi muncul</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-col layout -->
+    <div class="rec-body">
+
+      <div class="rec-left-col">
+        <div class="rule-box">
+          <div class="rb-header">
+            <div class="rb-title">Rule Frequency</div>
+            <div class="rb-sub">Masalah paling umum di test set</div>
+          </div>
+          <div id="ruleBars" class="rule-bars"></div>
+        </div>
+      </div>
+
+      <div class="rec-right-col">
+        <div class="rec-tabs">
+          <button class="rtab active" onclick="switchRec(0)">Cluster 0</button>
+          <button class="rtab" onclick="switchRec(1)">Cluster 1</button>
+          <button class="rtab" onclick="switchRec(2)">Cluster 2</button>
+        </div>
+        <div class="rec-cards" id="recCards"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CLUSTER PROFILE — MERGED -->
+  <section class="section alt" id="clusters">
+    <div class="section-label">02 — Seg. Profile</div>
+    <h2 class="section-title">Cluster Profile</h2>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-top">
+          <span class="kpi-badge badge-0">Cluster 0</span>
+          <span class="kpi-tag">Low Load · Idle</span>
+        </div>
+        <div class="kpi-val">4.2 <span>kWh avg</span></div>
+        <div class="kpi-meta"><span>CO₂: 0.0015 tCO₂</span><span>PF: 86.2%</span></div>
+        <div class="kpi-bar"><div class="kpi-fill kf-0" id="kf0"></div></div>
+        <div class="kpi-count" id="kc0">42% dari total</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top">
+          <span class="kpi-badge badge-1">Cluster 1</span>
+          <span class="kpi-tag">Medium Load · Night</span>
+        </div>
+        <div class="kpi-val">9.8 <span>kWh avg</span></div>
+        <div class="kpi-meta"><span>CO₂: 0.0041 tCO₂</span><span>PF: 72.4%</span></div>
+        <div class="kpi-bar"><div class="kpi-fill kf-1" id="kf1"></div></div>
+        <div class="kpi-count" id="kc1">33% dari total</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top">
+          <span class="kpi-badge badge-2">Cluster 2</span>
+          <span class="kpi-tag">High Load · Day Shift</span>
+        </div>
+        <div class="kpi-val">31.4 <span>kWh avg</span></div>
+        <div class="kpi-meta"><span>CO₂: 0.0138 tCO₂</span><span>PF: 58.1%</span></div>
+        <div class="kpi-bar"><div class="kpi-fill kf-2" id="kf2"></div></div>
+        <div class="kpi-count" id="kc2">25% dari total</div>
+      </div>
+    </div>
+
+    <div class="cluster-tabs" style="margin-top:40px">
+      <button class="ctab active" onclick="switchCluster(0)">Cluster 0</button>
+      <button class="ctab" onclick="switchCluster(1)">Cluster 1</button>
+      <button class="ctab" onclick="switchCluster(2)">Cluster 2</button>
+    </div>
+    <div class="cluster-detail" id="clusterDetail"></div>
+    <div class="chart-wrap">
+      <div class="cw-header">
+        <div class="cw-title">Profil Fitur — Semua Cluster</div>
+        <div class="cw-sub">Nilai rata-rata setelah log-transform + RobustScaler</div>
+      </div>
+      <canvas id="radarChart" height="340"></canvas>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="section" id="comparison">
+    <div class="section-label">03 — Feat. Compare</div>
+    <h2 class="section-title">Feat. Compare</h2>
+    <p class="section-desc">Nilai scaled setelah RobustScaler. Kolom tertinggi per baris diberi tanda <strong>bold</strong>.</p>
+    <div class="table-outer">
+      <table class="ctable">
+        <thead>
+          <tr>
+            <th>Fitur</th>
+            <th><span class="th-pip pip-0"></span>Cluster 0</th>
+            <th><span class="th-pip pip-1"></span>Cluster 1</th>
+            <th><span class="th-pip pip-2"></span>Cluster 2</th>
+            <th>Interpretasi</th>
+          </tr>
+        </thead>
+        <tbody id="ctbody"></tbody>
+      </table>
+    </div>
+    <div class="chart-wrap mt40">
+      <div class="cw-header">
+        <div class="cw-title">Distribusi Record per Cluster</div>
+        <div class="cw-sub">Proporsi berdasarkan jumlah record</div>
+      </div>
+      <canvas id="barChart" height="200"></canvas>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-col">
+      <div class="footer-brand">◆ Wattwise</div>
+      <div class="footer-tagline">Energy Efficiency Intelligence Platform</div>
+      <div class="footer-copy">© 2025 Wattwise. Built for industrial energy analytics.</div>
+    </div>
+
+    <div class="footer-col footer-col--right">
+      <div class="footer-stack-label">Tech Stack</div>
+      <div class="footer-stack">
+        <span class="footer-tag">KMeans K=3</span>
+        <span class="footer-tag">Content-Based Filtering</span>
+        <span class="footer-tag">RobustScaler</span>
+        <span class="footer-tag">Silhouette 0.47</span>
+        <span class="footer-tag">8.600+ Records</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/frontend/assets/js/main.js"></script>
+</body>
+</html>
