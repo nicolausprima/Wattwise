@@ -10,7 +10,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav class="nav">
     <div class="nav-brand">
       <div class="nav-mark">◆</div>
@@ -23,7 +22,6 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-chip">KMeans K=3 · Content-Based Filtering · Steel Industry Dataset</div>
     <h1 class="hero-title">Energy Efficiency<br><em>Intelligence</em></h1>
@@ -39,7 +37,29 @@
     </div>
   </section>
 
-  <!-- SECTION 1: RECOMMENDATIONS — HERO SECTION (TOP) -->
+  <section class="section" id="live-predict" style="background-color: var(--bg-alt); padding-top: 40px; padding-bottom: 40px;">
+    <div class="sec-header">
+      <div class="section-label" style="color:var(--g)">LIVE INFERENCE</div>
+      <h2 class="section-title">Kalkulator Prediksi Energi</h2>
+      <p class="section-desc">Masukkan parameter energi untuk melihat ke klaster mana data ini masuk, beserta rekomendasinya secara realtime dari Vercel.</p>
+    </div>
+
+    <form id="predictionForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+      <input type="number" id="in_Usage_kWh" step="any" placeholder="Usage_kWh (contoh: 45.5)" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      <input type="number" id="in_Lagging_kVarh" step="any" placeholder="Lagging Reactive kVarh" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      <input type="number" id="in_Leading_kVarh" step="any" placeholder="Leading Reactive kVarh" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      <input type="number" id="in_CO2" step="any" placeholder="CO2(tCO2)" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      <input type="number" id="in_Lagging_PF" step="any" placeholder="Lagging Power Factor" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      <input type="number" id="in_Leading_PF" step="any" placeholder="Leading Power Factor" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      <input type="number" id="in_NSM" step="any" placeholder="NSM (contoh: 3600)" required style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); background: var(--bg);">
+      
+      <button type="submit" style="padding: 12px; background: var(--g); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: var(--font-mono); font-weight: 500; transition: opacity 0.2s;">Prediksi Sekarang</button>
+    </form>
+
+    <div id="predictionResult" style="padding: 24px; border: 1px dashed var(--g); border-radius: 8px; background: rgba(45,122,79,0.05); display: none; max-width: 1200px; margin-left: auto; margin-right: auto; margin-top: 24px;">
+      </div>
+  </section>
+
   <section class="rec-section" id="recommendations">
 
     <div class="rec-intro">
@@ -70,7 +90,6 @@
       </div>
     </div>
 
-    <!-- Two-col layout -->
     <div class="rec-body">
 
       <div class="rec-left-col">
@@ -95,7 +114,6 @@
     </div>
   </section>
 
-  <!-- CLUSTER PROFILE — MERGED -->
   <section class="section alt" id="clusters">
     <div class="section-label">02 — Seg. Profile</div>
     <h2 class="section-title">Cluster Profile</h2>
@@ -148,7 +166,6 @@
     </div>
   </section>
 
-  <!-- COMPARISON -->
   <section class="section" id="comparison">
     <div class="section-label">03 — Feat. Compare</div>
     <h2 class="section-title">Feat. Compare</h2>
@@ -176,7 +193,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-col">
       <div class="footer-brand">◆ Wattwise</div>
