@@ -85,3 +85,6 @@ def predict():
             "message": f"{str(e)}",
             "trace": traceback.format_exc()
         }), 400
+
+# Wajib ada untuk Vercel mengenali Flask app
+app.debug = False
