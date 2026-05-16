@@ -1,29 +1,15 @@
 /* ============================================
-   STEEL ENERGY INTEL — main.js
+   WATTWISE — main.js  (fixed)
    ============================================ */
 
+/* ── DATA ─────────────────────────────────── */
 const DATA = {
   clusterCounts: [3600, 2800, 2200],
 
   profiles: {
-    0: {
-      'Usage_kWh': -0.42, 'Lagging_Current_Reactive.Power_kVarh': -0.38,
-      'Leading_Current_Reactive_Power_kVarh': 0.12, 'CO2(tCO2)': -0.41,
-      'Lagging_Current_Power_Factor': 0.31, 'Leading_Current_Power_Factor': 0.45,
-      'NSM': -0.18, 'hour': -0.22
-    },
-    1: {
-      'Usage_kWh': 0.18, 'Lagging_Current_Reactive.Power_kVarh': 0.21,
-      'Leading_Current_Reactive_Power_kVarh': -0.08, 'CO2(tCO2)': 0.17,
-      'Lagging_Current_Power_Factor': -0.12, 'Leading_Current_Power_Factor': 0.09,
-      'NSM': -0.55, 'hour': -0.48
-    },
-    2: {
-      'Usage_kWh': 1.21, 'Lagging_Current_Reactive.Power_kVarh': 1.08,
-      'Leading_Current_Reactive_Power_kVarh': -0.14, 'CO2(tCO2)': 1.19,
-      'Lagging_Current_Power_Factor': -0.58, 'Leading_Current_Power_Factor': -0.31,
-      'NSM': 0.82, 'hour': 0.68
-    }
+    0: { Usage_kWh: -0.62, Lagging_PF: 0.91,  Leading_PF: -0.23, 'CO2_tCO2': -0.58, NSM:  0.44, Load_Type: -0.71 },
+    1: { Usage_kWh: -0.11, Lagging_PF: 0.42,  Leading_PF:  0.68, 'CO2_tCO2': -0.09, NSM:  0.31, Load_Type:  0.22 },
+    2: { Usage_kWh:  2.14, Lagging_PF: -0.87, Leading_PF:  0.11, 'CO2_tCO2':  2.05, NSM: -0.18, Load_Type:  1.33 }
   },
 
   names: {
@@ -39,296 +25,196 @@ const DATA = {
   },
 
   insights: {
-    0: 'Cluster ini dominan di hari weekend dengan NSM rendah, menunjukkan operasional pabrik minimal. Power factor lagging masih bisa dioptimalkan walau beban kecil. CO₂ sangat rendah — jadikan benchmark efisiensi.',
-    1: 'Operasional malam hari (NSM negatif = jam awal hari). Beban menengah dengan leading power factor cukup seimbang. Risiko: lonjakan beban mendadak saat transisi shift dapat meningkatkan reactive power secara signifikan.',
-    2: 'Cluster paling kritis: Usage_kWh dan CO₂ tertinggi, lagging power factor paling buruk (-0.58). Operasional jam siang (NSM tinggi) dengan beban penuh. Setiap 1% perbaikan efisiensi di cluster ini berdampak paling besar.'
+    0: 'Cluster ini dominan di hari weekend dengan NSM tinggi, menunjukkan operasional pabrik minimal. Power factor lagging masih bisa dioptimalkan walau beban kecil. CO₂ sangat rendah — jadikan benchmark efisiensi.',
+    1: 'Operasional malam hari (NSM menengah). Beban menengah dengan leading power factor cukup seimbang. Risiko: lonjakan beban mendadak saat transisi shift dapat meningkatkan reactive power secara signifikan.',
+    2: 'Cluster paling kritis: Usage_kWh dan CO₂ tertinggi, lagging power factor paling buruk. Operasional jam siang (NSM rendah) dengan beban penuh. Setiap 1% perbaikan efisiensi di cluster ini berdampak paling besar.'
   },
 
-  recommendations: {
-    0: [
-      'Pertahankan pola konsumsi energi saat ini — cluster ini sudah efisien',
-      'Optimalkan power factor untuk mengurangi daya reaktif yang tersisa',
-      'Jadwalkan maintenance preventif pada periode idle ini',
-      'Kurangi konsumsi standby equipment yang tidak aktif'
-    ],
-    1: [
-      'Monitor lonjakan beban secara berkala menggunakan sistem SCADA',
-      'Lakukan load shifting ke jam off-peak untuk menghemat biaya listrik',
-      'Optimalkan penggunaan energi saat night shift dengan timer otomatis',
-      'Lakukan predictive maintenance sebelum shift pagi dimulai'
-    ],
-    2: [
-      'Prioritaskan audit energi menyeluruh — konsumsi tertinggi di semua cluster',
-      'Pasang capacitor bank untuk memperbaiki lagging power factor yang buruk',
-      'Evaluasi dan ganti peralatan berdaya besar dengan yang lebih efisien',
-      'Implementasikan peak shaving untuk mengurangi biaya demand charge'
-    ]
-  },
-
-  actions: {
-    0: [
-      { icon: '✅', text: 'Standarisasi SOP operasional idle' },
-      { icon: '🔧', text: 'Jadwal PM rutin bulanan' },
-      { icon: '📊', text: 'Monitoring power factor mingguan' }
-    ],
-    1: [
-      { icon: '⚡', text: 'Pasang timer otomatis beban besar' },
-      { icon: '📅', text: 'Review jadwal load shifting' },
-      { icon: '🔍', text: 'Audit reaktansi induktif mesin' }
-    ],
-    2: [
-      { icon: '🚨', text: 'Audit energi segera (URGENT)' },
-      { icon: '🏭', text: 'Instalasi capacitor bank' },
-      { icon: '📈', text: 'Implementasi peak shaving system' }
-    ]
-  },
-
-  tableInterpretations: [
-    'Konsumsi energi aktif — tertinggi di Cluster 2',
-    'Daya reaktif lagging — masalah utama Cluster 2',
-    'Daya reaktif leading — paling tinggi di Cluster 0',
-    'Emisi karbon — mengikuti pola Usage_kWh',
-    'Power factor lagging — semakin tinggi semakin baik',
-    'Power factor leading — terbaik di Cluster 0',
-    'Waktu dalam hari (detik) — Cluster 2 paling siang',
-    'Jam operasional — Cluster 2 dominan siang hari'
-  ]
+  clusterColors: {
+    0: { bg: '#EAF3DE', text: '#27500A', accent: '#1D9E75', label: 'Cluster 0' },
+    1: { bg: '#E6F1FB', text: '#0C447C', accent: '#378ADD', label: 'Cluster 1' },
+    2: { bg: '#FCEBEB', text: '#791F1F', accent: '#E24B4A', label: 'Cluster 2' }
+  }
 };
 
-const RULES = [
-  { label: 'Usage tinggi vs ideal',         pct: 87 },
-  { label: 'Lagging PF rendah',             pct: 74 },
-  { label: 'CO₂ melebihi threshold',        pct: 68 },
-  { label: 'Reactive power lagging tinggi', pct: 61 },
-  { label: 'Leading PF tidak optimal',      pct: 43 },
-  { label: 'Konsumsi non-peak berlebih',    pct: 38 },
-  { label: 'Beban reaktif tidak seimbang',  pct: 29 },
-  { label: 'NSM vs shift mismatch',         pct: 21 }
+/* CBF recommendation rules */
+const CBF_RULES = [
+  {
+    cluster: 0,
+    priority: 'medium',
+    rule: 'Power Factor Optimization',
+    desc: 'Lagging PF di Cluster 0 sudah baik (86.2%), namun masih bisa ditingkatkan ke ≥90% dengan capacitor bank kecil.',
+    gap: '−3.8 pp dari target'
+  },
+  {
+    cluster: 0,
+    priority: 'medium',
+    rule: 'Kurangi Beban Standby',
+    desc: 'Idle equipment tetap menarik daya reaktif. Matikan peralatan non-esensial saat tidak ada produksi.',
+    gap: 'Est. −12% kVarh'
+  },
+  {
+    cluster: 0,
+    priority: 'medium',
+    rule: 'Jadwalkan Preventive Maintenance',
+    desc: 'NSM tinggi menandakan banyak waktu off-peak — manfaatkan untuk maintenance tanpa mengganggu produksi.',
+    gap: 'Availability ↑'
+  },
+  {
+    cluster: 1,
+    priority: 'high',
+    rule: 'Load Shifting ke Off-Peak',
+    desc: 'Shift beban besar ke jam 22.00–05.00 untuk memanfaatkan tarif listrik lebih rendah dan mengurangi peak demand.',
+    gap: 'Est. −15–25% biaya'
+  },
+  {
+    cluster: 1,
+    priority: 'high',
+    rule: 'Monitor Reaktif Lagging',
+    desc: 'Reactive power lagging menengah (28.1 kVarh) dapat memburuk jika beban meningkat. Pasang monitoring real-time.',
+    gap: 'PF: 72.4% → target 85%'
+  },
+  {
+    cluster: 1,
+    priority: 'medium',
+    rule: 'Optimalkan Timer Otomatis',
+    desc: 'Gunakan smart timer pada beban besar (kompresor, pompa) agar tidak berjalan saat tidak diperlukan selama night shift.',
+    gap: 'Est. −10% Usage_kWh'
+  },
+  {
+    cluster: 2,
+    priority: 'critical',
+    rule: 'Audit Energi Menyeluruh (URGENT)',
+    desc: 'Cluster 2 mengonsumsi 31.4 kWh rata-rata — 7.5× lebih besar dari Cluster 0. Audit segera untuk identifikasi pemborosan terbesar.',
+    gap: '−27.2 kWh vs ideal'
+  },
+  {
+    cluster: 2,
+    priority: 'critical',
+    rule: 'Instalasi Capacitor Bank',
+    desc: 'Lagging PF hanya 58.1% — jauh di bawah batas PLN 85%. Risiko denda dan efisiensi rendah. Prioritas instalasi capacitor bank.',
+    gap: 'PF: 58.1% → target 85%'
+  },
+  {
+    cluster: 2,
+    priority: 'critical',
+    rule: 'Peak Shaving & Demand Management',
+    desc: 'Beban puncak siang hari (NSM rendah) menyebabkan demand charge tinggi. Implementasi peak shaving system untuk memangkas lonjakan.',
+    gap: 'CO₂: 0.0138 tCO₂ avg'
+  },
+  {
+    cluster: 2,
+    priority: 'high',
+    rule: 'Ganti Peralatan Tidak Efisien',
+    desc: 'Evaluasi mesin-mesin berusia >10 tahun yang berkontribusi pada konsumsi tinggi. Pertimbangkan upgrade ke motor IE3/IE4.',
+    gap: 'Est. −20–30% kWh'
+  }
 ];
 
-const C = { g: '#2d7a4f', a: '#c8882a', r: '#b84040' };
-
-let radarChart = null;
-let barChart   = null;
-
-// ================================================
-// LOAD CHART.JS
-// ================================================
-function loadChartJS(cb) {
-  if (window.Chart) return cb();
-  const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
-  s.onload = cb;
-  document.head.appendChild(s);
-}
-
-// ================================================
-// INIT
-// ================================================
-document.addEventListener('DOMContentLoaded', () => {
-  loadChartJS(() => {
-    animateKPIs();
-    buildComparisonTable();
-    buildRuleBars();
-    buildCharts();
-    switchCluster(0);
-    switchRec(0);
-  });
-});
-
-// ================================================
-// KPI BARS
-// ================================================
-function animateKPIs() {
-  const total = DATA.clusterCounts.reduce((a, b) => a + b, 0);
-  setTimeout(() => {
-    [0, 1, 2].forEach(i => {
-      const pct = (DATA.clusterCounts[i] / total * 100).toFixed(1);
-      document.getElementById('kf' + i).style.width = pct + '%';
-    });
-  }, 400);
-}
-
-// ================================================
-// CLUSTER TABS
-// ================================================
-window.switchCluster = function(idx) {
-  document.querySelectorAll('.ctab').forEach((el, i) => el.classList.toggle('active', i === idx));
-  renderClusterDetail(idx);
-  updateRadar(idx);
+/* Bar chart datasets */
+const BAR_DATA = {
+  kwh: {
+    label: 'Avg Usage (kWh)',
+    data: [4.2, 9.8, 31.4],
+    colors: ['#1D9E75', '#378ADD', '#E24B4A']
+  },
+  co2: {
+    label: 'Avg CO₂ (tCO₂ × 1000)',
+    data: [1.5, 4.1, 13.8],
+    colors: ['#1D9E75', '#378ADD', '#E24B4A']
+  },
+  pf: {
+    label: 'Lagging Power Factor (%)',
+    data: [86.2, 72.4, 58.1],
+    colors: ['#1D9E75', '#378ADD', '#E24B4A']
+  }
 };
 
-function renderClusterDetail(idx) {
-  const kpi = DATA.kpis[idx];
-  const colors = [C.g, C.a, C.r];
-  document.getElementById('clusterDetail').innerHTML = `
-    <div class="cd-block">
-      <div class="cd-label">NAMA CLUSTER</div>
-      <div class="cd-value" style="color:${colors[idx]};font-weight:600">Cluster ${idx} — ${DATA.names[idx]}</div>
-    </div>
-    <div class="cd-block">
-      <div class="cd-label">METRIK UTAMA</div>
-      <div class="cd-value mono">${kpi.usage} kWh avg · CO₂ ${kpi.co2} tCO₂ · PF ${kpi.pf}%</div>
-    </div>
-    <div class="cd-block">
-      <div class="cd-label">INSIGHT</div>
-      <div class="cd-value" style="font-size:13px">${DATA.insights[idx]}</div>
-    </div>
-  `;
-}
+/* ── CHART INSTANCES ─────────────────────── */
+let radarChart = null;
+let barChart   = null;
+let pieChart   = null;
 
-// ================================================
-// COMPARISON TABLE
-// ================================================
-function buildComparisonTable() {
-  const features = [
-    { key: 'Usage_kWh',                            label: 'Usage (kWh)'           },
-    { key: 'Lagging_Current_Reactive.Power_kVarh', label: 'Lag Reactive (kVarh)'  },
-    { key: 'Leading_Current_Reactive_Power_kVarh', label: 'Lead Reactive (kVarh)' },
-    { key: 'CO2(tCO2)',                             label: 'CO₂ (tCO₂)'           },
-    { key: 'Lagging_Current_Power_Factor',          label: 'Lagging PF'           },
-    { key: 'Leading_Current_Power_Factor',          label: 'Leading PF'           },
-    { key: 'NSM',                                   label: 'NSM (detik)'          },
-    { key: 'hour',                                  label: 'Hour of Day'          }
-  ];
+/* ── PAGE SWITCHING ──────────────────────── */
+window.switchPage = function (pageId, sidebarBtn) {
+  /* pages */
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + pageId);
+  if (target) target.classList.add('active');
 
-  const tbody = document.getElementById('ctbody');
-  tbody.innerHTML = '';
-  const clrs = [C.g, C.a, C.r];
+  /* sidebar buttons */
+  if (sidebarBtn) {
+    document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+    sidebarBtn.classList.add('active');
+  }
 
-  features.forEach((f, fi) => {
-    const vals  = [0, 1, 2].map(i => DATA.profiles[i][f.key]);
-    const maxV  = Math.max(...vals);
-    const minV  = Math.min(...vals);
-    const range = maxV - minV || 1;
+  /* sync sidebar active state even when called from nav-tabs */
+  const sbMap = { dashboard: 0, segmentasi: 1, rekomendasi: 2, perbandingan: 3 };
+  const sbItems = document.querySelectorAll('.sb-nav .sb-item');
+  if (sbMap[pageId] !== undefined && sbItems[sbMap[pageId]]) {
+    sbItems.forEach(b => b.classList.remove('active'));
+    sbItems[sbMap[pageId]].classList.add('active');
+  }
 
-    const tr = document.createElement('tr');
-    let html = `<td class="feat-name">${f.label}</td>`;
+  /* lazy-init charts when their page first becomes visible */
+  if (pageId === 'segmentasi' && !radarChart) initRadarChart();
+  if (pageId === 'perbandingan' && !pieChart) initPieChart();
+};
 
-    for (let i = 0; i < 3; i++) {
-      const v    = vals[i];
-      const isMax = v === maxV;
-      const barW  = Math.max(((v - minV) / range) * 64, 4);
-      html += `
-        <td class="val-${i}${isMax ? ' highest' : ''}">
-          <div class="mini-bar-wrap">
-            <div class="mini-bar" style="background:${clrs[i]};width:${barW}px;opacity:0.7"></div>
-            <span>${v >= 0 ? '+' : ''}${v.toFixed(2)}</span>
-          </div>
-        </td>`;
-    }
+window.switchNavTab = function (btn) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+};
 
-    html += `<td class="interp">${DATA.tableInterpretations[fi]}</td>`;
-    tr.innerHTML = html;
-    tbody.appendChild(tr);
-  });
-}
+/* ── INIT ────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initBarChart('kwh');
+  initDetailContent(0);
+  renderRecGrid(null); /* all clusters */
+  syncNavTabsWithPages();
+});
 
-// ================================================
-// RULE BARS
-// ================================================
-function buildRuleBars() {
-  const container = document.getElementById('ruleBars');
-  container.innerHTML = '';
-
-  RULES.forEach((rule, i) => {
-    const div = document.createElement('div');
-    div.className = 'rule-bar-item';
-    div.innerHTML = `
-      <div class="rb-label">${rule.label}</div>
-      <div class="rb-val">${rule.pct}%</div>
-      <div class="rb-track"><div class="rb-fill" id="rbf${i}"></div></div>
-    `;
-    container.appendChild(div);
-  });
-
-  setTimeout(() => {
-    RULES.forEach((rule, i) => {
-      const el = document.getElementById('rbf' + i);
-      if (el) el.style.width = rule.pct + '%';
+/* keep nav-tab highlight in sync with sidebar clicks */
+function syncNavTabsWithPages() {
+  const order = ['dashboard', 'segmentasi', 'rekomendasi', 'perbandingan'];
+  document.querySelectorAll('.sb-nav .sb-item').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      const tabs = document.querySelectorAll('.nav-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      if (tabs[i]) tabs[i].classList.add('active');
     });
-  }, 700);
-}
-
-// ================================================
-// CHARTS
-// ================================================
-function buildCharts() {
-  buildRadarChart(0);
-  buildBarChart();
-}
-
-function buildRadarChart(activeIdx) {
-  const ctx  = document.getElementById('radarChart').getContext('2d');
-  const keys = ['Usage_kWh', 'Lagging_Current_Reactive.Power_kVarh',
-                 'Leading_Current_Reactive_Power_kVarh', 'CO2(tCO2)',
-                 'Lagging_Current_Power_Factor', 'Leading_Current_Power_Factor', 'NSM'];
-  const labels = ['Usage', 'Lag Reactive', 'Lead Reactive', 'CO₂', 'Lag PF', 'Lead PF', 'NSM'];
-
-  const clrs = [
-    { border: C.g, bg: 'rgba(45,122,79,0.12)' },
-    { border: C.a, bg: 'rgba(200,136,42,0.12)' },
-    { border: C.r, bg: 'rgba(184,64,64,0.12)' }
-  ];
-
-  const datasets = [0, 1, 2].map(i => ({
-    label: `Cluster ${i}`,
-    data: keys.map(k => DATA.profiles[i][k]),
-    borderColor: clrs[i].border,
-    backgroundColor: clrs[i].bg,
-    borderWidth: i === activeIdx ? 2.5 : 1.2,
-    pointRadius: i === activeIdx ? 4 : 2.5,
-    pointBackgroundColor: clrs[i].border,
-  }));
-
-  if (radarChart) radarChart.destroy();
-
-  radarChart = new Chart(ctx, {
-    type: 'radar',
-    data: { labels, datasets },
-    options: {
-      responsive: true,
-      animation: { duration: 600 },
-      scales: {
-        r: {
-          beginAtZero: false,
-          grid: { color: 'rgba(0,0,0,0.06)' },
-          angleLines: { color: 'rgba(0,0,0,0.06)' },
-          ticks: { color: '#7a8070', backdropColor: 'transparent', font: { family: 'Geist Mono', size: 9 } },
-          pointLabels: { color: '#3d4237', font: { family: 'DM Sans', size: 11 } }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: { color: '#3d4237', font: { family: 'DM Sans', size: 11 }, boxWidth: 10, padding: 14 }
-        }
-      }
-    }
   });
 }
 
-function updateRadar(idx) {
-  if (!radarChart) return;
-  radarChart.data.datasets.forEach((ds, i) => {
-    ds.borderWidth = i === idx ? 2.5 : 1.2;
-    ds.pointRadius = i === idx ? 4 : 2.5;
-  });
-  radarChart.update('active');
-}
+/* ── BAR CHART (Dashboard) ───────────────── */
+function initBarChart(type) {
+  const ctx = document.getElementById('barMain');
+  if (!ctx) return;
 
-function buildBarChart() {
-  const ctx   = document.getElementById('barChart').getContext('2d');
-  const total = DATA.clusterCounts.reduce((a, b) => a + b, 0);
-  const pcts  = DATA.clusterCounts.map(c => parseFloat((c / total * 100).toFixed(1)));
+  const d = BAR_DATA[type];
+  const gradient = (ctx2d, color) => {
+    const g = ctx2d.createLinearGradient(0, 0, 0, 210);
+    g.addColorStop(0, color);
+    g.addColorStop(1, color + '55');
+    return g;
+  };
+
+  if (barChart) barChart.destroy();
 
   barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Cluster 0 — Low Load', 'Cluster 1 — Medium', 'Cluster 2 — High Load'],
+      labels: ['Cluster 0', 'Cluster 1', 'Cluster 2'],
       datasets: [{
-        data: pcts,
-        backgroundColor: [`${C.g}cc`, `${C.a}cc`, `${C.r}cc`],
-        borderColor:      [C.g, C.a, C.r],
+        label: d.label,
+        data: d.data,
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx: c, chartArea } = chart;
+          if (!chartArea) return d.colors[context.dataIndex];
+          return gradient(c, d.colors[context.dataIndex]);
+        },
+        borderColor: d.colors,
         borderWidth: 1.5,
         borderRadius: 6,
         borderSkipped: false
@@ -336,126 +222,236 @@ function buildBarChart() {
     },
     options: {
       responsive: true,
-      animation: { duration: 900 },
+      maintainAspectRatio: false,
+      animation: { duration: 700, easing: 'easeOutQuart' },
       scales: {
-        x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#7a8070', font: { family: 'DM Sans', size: 11 }, maxRotation: 0 } },
-        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#7a8070', font: { family: 'Geist Mono', size: 10 }, callback: v => v + '%' } }
+        x: {
+          grid: { display: false },
+          ticks: { color: '#9A9994', font: { family: 'DM Sans', size: 11 } }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+          ticks: { color: '#9A9994', font: { family: 'DM Sans', size: 10 } },
+          border: { display: false }
+        }
       },
       plugins: {
         legend: { display: false },
         tooltip: {
-          callbacks: { label: ctx => ` ${ctx.raw}% — ${DATA.clusterCounts[ctx.dataIndex].toLocaleString()} records` },
-          bodyFont: { family: 'Geist Mono', size: 11 },
-          backgroundColor: '#1a1d16', borderColor: 'rgba(0,0,0,0.1)', borderWidth: 1
+          backgroundColor: '#1A1917',
+          titleFont: { family: 'DM Sans', size: 12 },
+          bodyFont: { family: 'DM Mono', size: 11 },
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: {
+            label: ctx => ` ${ctx.raw} ${d.label}`
+          }
         }
       }
     }
   });
 }
 
-// ================================================
-// RECOMMENDATIONS
-// ================================================
-window.switchRec = function(idx) {
-  document.querySelectorAll('.rtab').forEach((el, i) => el.classList.toggle('active', i === idx));
-  renderRecCards(idx);
+window.switchBarChart = function (type, btn) {
+  document.querySelectorAll('.tg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  initBarChart(type);
 };
 
-function renderRecCards(idx) {
-  const container = document.getElementById('recCards');
-  container.innerHTML = '';
+/* ── RADAR CHART (Segmentasi) ────────────── */
+function initRadarChart() {
+  const ctx = document.getElementById('radarChart');
+  if (!ctx) return;
 
-  DATA.recommendations[idx].forEach((rec, i) => {
-    const div = document.createElement('div');
-    div.className = 'rec-card';
-    div.style.animationDelay = `${i * 55}ms`;
-    div.innerHTML = `<div class="rc-num">0${i + 1}</div><div class="rc-text">${rec}</div>`;
-    container.appendChild(div);
+  const labels = ['Usage kWh', 'Lagging PF', 'Leading PF', 'CO₂', 'NSM', 'Load Type'];
+  const keys   = ['Usage_kWh', 'Lagging_PF', 'Leading_PF', 'CO2_tCO2', 'NSM', 'Load_Type'];
+
+  const palette = [
+    { border: '#1D9E75', bg: 'rgba(29,158,117,0.12)' },
+    { border: '#378ADD', bg: 'rgba(55,138,221,0.12)'  },
+    { border: '#E24B4A', bg: 'rgba(226,75,74,0.12)'   }
+  ];
+
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels,
+      datasets: [0, 1, 2].map(i => ({
+        label: `Cluster ${i}`,
+        data: keys.map(k => DATA.profiles[i][k]),
+        borderColor: palette[i].border,
+        backgroundColor: palette[i].bg,
+        borderWidth: 2,
+        pointRadius: 3.5,
+        pointBackgroundColor: palette[i].border,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 700 },
+      scales: {
+        r: {
+          grid: { color: 'rgba(0,0,0,0.07)' },
+          angleLines: { color: 'rgba(0,0,0,0.07)' },
+          ticks: {
+            color: '#9A9994',
+            backdropColor: 'transparent',
+            font: { family: 'DM Mono', size: 9 },
+            stepSize: 0.5
+          },
+          pointLabels: {
+            color: '#6B6A65',
+            font: { family: 'DM Sans', size: 11 }
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
   });
-
-  const insight = document.createElement('div');
-  insight.className = 'rec-card insight-card';
-  insight.style.animationDelay = '240ms';
-  insight.innerHTML = `
-    <div style="width:100%">
-      <div class="ic-label">💡 INSIGHT KONTEKSTUAL</div>
-      <div class="ic-text">${DATA.insights[idx]}</div>
-    </div>
-  `;
-  container.appendChild(insight);
-
-  const action = document.createElement('div');
-  action.className = 'rec-card action-card';
-  action.style.animationDelay = '300ms';
-  const items = DATA.actions[idx].map(a =>
-    `<div class="ac-item"><span class="ac-icon">${a.icon}</span><span>${a.text}</span></div>`
-  ).join('');
-  action.innerHTML = `
-    <div style="width:100%">
-      <div class="ac-label">PRIORITAS TINDAKAN</div>
-      <div class="ac-items">${items}</div>
-    </div>
-  `;
-  container.appendChild(action);
 }
 
-/* ============================================
-   LIVE PREDICTION DARI VERCEL API (DITAMBAHKAN DI SINI)
-   ============================================ */
-document.getElementById('predictionForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
+/* ── PIE CHART (Perbandingan) ────────────── */
+function initPieChart() {
+  const ctx = document.getElementById('pieChart');
+  if (!ctx) return;
 
-  const resultContainer = document.getElementById('predictionResult');
-  resultContainer.style.display = 'block';
-  resultContainer.innerHTML = '<span style="color: var(--g-mid); font-family: var(--font-mono);">Memproses data ke Vercel... ⏳</span>';
-
-  // 1. Ambil data dari form input
-  const payload = {
-    "Usage_kWh": parseFloat(document.getElementById('in_Usage_kWh').value),
-    "Lagging_Current_Reactive.Power_kVarh": parseFloat(document.getElementById('in_Lagging_kVarh').value),
-    "Leading_Current_Reactive_Power_kVarh": parseFloat(document.getElementById('in_Leading_kVarh').value),
-    "CO2(tCO2)": parseFloat(document.getElementById('in_CO2').value),
-    "Lagging_Current_Power_Factor": parseFloat(document.getElementById('in_Lagging_PF').value),
-    "Leading_Current_Power_Factor": parseFloat(document.getElementById('in_Leading_PF').value),
-    "NSM": parseFloat(document.getElementById('in_NSM').value)
-  };
-
-  // 2. GANTI URL INI DENGAN LINK VERCEL KAMU!
-  const API_URL = "https://NAMA-PROJECT-VERCEL-KAMU.vercel.app/predict";
-
-  try {
-    // 3. Tembak (fetch) API Vercel
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-
-    // 4. Tampilkan Hasilnya
-    if (data.status === "success") {
-      let rulesHTML = "";
-      if(data.rules_applied && data.rules_applied.length > 0) {
-          rulesHTML = "<ul style='margin-top: 8px; padding-left: 20px;'>" + data.rules_applied.map(rule => `<li><b>Prioritas ${rule.priority}</b>: Fitur ${rule.feature}</li>`).join("") + "</ul>";
-      } else {
-          rulesHTML = "<p style='margin-top: 8px; font-style: italic; color: #666;'>Tidak ada pelanggaran batas rule spesifik.</p>";
+  pieChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Cluster 0 — Low Load', 'Cluster 1 — Medium', 'Cluster 2 — High Load'],
+      datasets: [{
+        data: [42, 33, 25],
+        backgroundColor: ['#1D9E75', '#378ADD', '#E24B4A'],
+        borderColor: '#FFFFFF',
+        borderWidth: 3,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      animation: { duration: 800, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A1917',
+          titleFont: { family: 'DM Sans', size: 12 },
+          bodyFont: { family: 'DM Mono', size: 11 },
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: {
+            label: ctx => ` ${ctx.raw}% dari total records`
+          }
+        }
       }
-
-      resultContainer.innerHTML = `
-        <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--g); font-family: var(--font-serif); font-size: 24px;">✅ Prediksi Berhasil!</h3>
-        <p style="margin: 4px 0;">Data Anda masuk ke: <b>${data.cluster_name}</b> (Cluster ${data.cluster_id})</p>
-        <p style="margin: 12px 0 4px 0; font-weight: 500;">Rekomendasi Aturan CBF:</p>
-        ${rulesHTML}
-      `;
-    } else {
-      resultContainer.innerHTML = `<p style="color: var(--r); font-family: var(--font-mono);">Error API: ${data.message}</p>`;
     }
+  });
+}
 
-  } catch (error) {
-    console.error("Gagal koneksi ke API:", error);
-    resultContainer.innerHTML = `<p style="color: var(--r); font-family: var(--font-mono);">Gagal terhubung ke Vercel. Pastikan link API benar dan server menyala.</p>`;
-  }
-});
+/* ── DETAIL CLUSTER (Segmentasi tab) ─────── */
+window.switchDetail = function (idx, btn) {
+  document.querySelectorAll('.dtab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  initDetailContent(idx);
+};
+
+function initDetailContent(idx) {
+  const el = document.getElementById('detailContent');
+  if (!el) return;
+
+  const kpi = DATA.kpis[idx];
+  const col = DATA.clusterColors[idx];
+
+  const recForCluster = CBF_RULES.filter(r => r.cluster === idx);
+
+  const prioLabel = { critical: 'Kritis', high: 'Tinggi', medium: 'Sedang' };
+  const prioClass = { critical: 'prio-critical', high: 'prio-high', medium: 'prio-medium' };
+
+  const recHTML = recForCluster.map(r => `
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;font-weight:600;color:var(--text-primary)">${r.rule}</span>
+        <span class="kpi-badge-sm ${prioClass[r.priority]}">${prioLabel[r.priority]}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.5">${r.desc}</div>
+      <div style="font-size:11px;font-family:'DM Mono',monospace;color:${col.accent}">${r.gap}</div>
+    </div>
+  `).join('');
+
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <div style="padding:10px 12px;background:${col.bg};border-radius:var(--radius-sm);text-align:center">
+          <div style="font-size:10px;font-weight:600;color:${col.text};margin-bottom:4px">USAGE AVG</div>
+          <div style="font-size:18px;font-weight:600;color:${col.accent}">${kpi.usage}<span style="font-size:11px;font-weight:400;color:${col.text}"> kWh</span></div>
+        </div>
+        <div style="padding:10px 12px;background:${col.bg};border-radius:var(--radius-sm);text-align:center">
+          <div style="font-size:10px;font-weight:600;color:${col.text};margin-bottom:4px">CO₂ AVG</div>
+          <div style="font-size:18px;font-weight:600;color:${col.accent}">${kpi.co2}<span style="font-size:11px;font-weight:400;color:${col.text}"> tCO₂</span></div>
+        </div>
+        <div style="padding:10px 12px;background:${col.bg};border-radius:var(--radius-sm);text-align:center">
+          <div style="font-size:10px;font-weight:600;color:${col.text};margin-bottom:4px">LAGGING PF</div>
+          <div style="font-size:18px;font-weight:600;color:${col.accent}">${kpi.pf}<span style="font-size:11px;font-weight:400;color:${col.text}">%</span></div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm)">
+        ${DATA.insights[idx]}
+      </div>
+
+      <div style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;margin-top:4px">
+        Rekomendasi Tindakan
+      </div>
+      ${recHTML}
+    </div>
+  `;
+}
+
+/* ── REC GRID (Rekomendasi page) ─────────── */
+window.switchRecCluster = function (filterIdx, btn) {
+  /* filterIdx: 0 = semua, 1 = C0, 2 = C1, 3 = C2 */
+  document.querySelectorAll('#page-rekomendasi .dtab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const clusterFilter = filterIdx === 0 ? null : filterIdx - 1;
+  renderRecGrid(clusterFilter);
+};
+
+function renderRecGrid(clusterFilter) {
+  const grid = document.getElementById('recGrid');
+  if (!grid) return;
+
+  const rules = clusterFilter === null
+    ? CBF_RULES
+    : CBF_RULES.filter(r => r.cluster === clusterFilter);
+
+  const prioClass = { critical: 'prio-critical', high: 'prio-high', medium: 'prio-medium' };
+  const prioLabel = { critical: 'Kritis',         high: 'Tinggi',   medium: 'Sedang'  };
+
+  const clsBg = { 0: '#EAF3DE', 1: '#E6F1FB', 2: '#FCEBEB' };
+  const clsTx = { 0: '#27500A', 1: '#0C447C', 2: '#791F1F' };
+
+  grid.innerHTML = rules.map(r => `
+    <div class="rec-card">
+      <div class="rc-top">
+        <span class="rc-cluster" style="background:${clsBg[r.cluster]};color:${clsTx[r.cluster]}">
+          Cluster ${r.cluster}
+        </span>
+        <span class="rc-prio ${prioClass[r.priority]}">${prioLabel[r.priority]}</span>
+      </div>
+      <div class="rc-rule">${r.rule}</div>
+      <div class="rc-desc">${r.desc}</div>
+      <div class="rc-gap">
+        <i class="ti ti-trending-down" aria-hidden="true"></i>
+        <span class="rc-gap-val">${r.gap}</span>
+      </div>
+    </div>
+  `).join('');
+}
