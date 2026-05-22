@@ -1,9 +1,9 @@
 Feature,Triggered_Count,Pct_of_TestSet
-Leading_Current_Reactive_Power_kVarh,5907,84.3
-Lagging_Current_Reactive.Power_kVarh,5414,77.3
-Lagging_Current_Power_Factor,5001,71.4
+Leading_Current_Reactive_Power_kVarh,5495,78.4
+Lagging_Current_Reactive.Power_kVarh,5358,76.5
 is_weekend,4896,69.9
-Usage_kWh,2614,37.3
+Lagging_Current_Power_Factor,3664,52.3
+Usage_kWh,2623,37.4
 CO2(tCO2),2594,37.0
-Leading_Current_Power_Factor,428,6.1
-NSM,292,4.2
+Leading_Current_Power_Factor,1557,22.2
+NSM,73,1.0

@@ -454,4 +454,8 @@ function renderRecGrid(clusterFilter) {
       </div>
     </div>
   `).join('');
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 58d618f (membenarkan modelling)

@@ -366,4 +366,8 @@ canvas { display: block; }
 /* ─── SCROLLBAR ─── */
 .main::-webkit-scrollbar { width: 6px; }
 .main::-webkit-scrollbar-track { background: transparent; }
+<<<<<<< HEAD
 .main::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; }
+=======
+.main::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; }
+>>>>>>> 58d618f (membenarkan modelling)
