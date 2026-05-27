@@ -17,10 +17,8 @@
 <body>
 
 
-  <!-- MAIN -->
   <div class="main">
 
-    <!-- TOPBAR -->
     <header class="topbar">
       <div class="topbar-brand">
         <span class="dot">◆</span>
@@ -40,15 +38,10 @@
       </div>
     </header>
 
-    <!-- CONTENT -->
     <div class="content">
 
-      <!-- ═══════════════════════════════════════════════════════ -->
-      <!-- PAGE: DASHBOARD                                        -->
-      <!-- ═══════════════════════════════════════════════════════ -->
       <section class="page active" id="page-dashboard" aria-label="Dashboard overview">
 
-        <!-- KPI ROW -->
         <div class="kpi-row">
           <div class="kpi-card kc-green">
             <div class="kpi-top">
@@ -84,7 +77,6 @@
           </div>
         </div>
 
-        <!-- CHART + CLUSTER PROPS -->
         <div class="grid-3-2">
           <div class="card">
             <div class="card-header">
@@ -167,9 +159,7 @@
           </div>
         </div>
 
-        <!-- BOTTOM ROW -->
         <div class="grid-2">
-          <!-- Top CBF Rules -->
           <div class="card">
             <div class="card-header">
               <div>
@@ -237,7 +227,6 @@
             </div>
           </div>
 
-          <!-- Quick feature comparison -->
           <div class="card">
             <div class="card-header">
               <div>
@@ -298,9 +287,6 @@
 
       </section>
 
-      <!-- ═══════════════════════════════════════════════════════ -->
-      <!-- PAGE: SEGMENTASI                                       -->
-      <!-- ═══════════════════════════════════════════════════════ -->
       <section class="page" id="page-segmentasi" aria-label="Segmentasi cluster">
 
         <div>
@@ -312,7 +298,6 @@
             Log-transform</div>
         </div>
 
-        <!-- SEGMENT CARDS -->
         <div class="seg-grid">
           <div class="seg-card s0">
             <span class="seg-badge" style="background:#EAF3DE;color:#3B6D11">Cluster 0</span>
@@ -358,7 +343,6 @@
           </div>
         </div>
 
-        <!-- DETAIL + RADAR -->
         <div class="grid-2">
           <div class="card">
             <div class="card-header">
@@ -402,9 +386,6 @@
 
       </section>
 
-      <!-- ═══════════════════════════════════════════════════════ -->
-      <!-- PAGE: REKOMENDASI                                      -->
-      <!-- ═══════════════════════════════════════════════════════ -->
       <section class="page" id="page-rekomendasi" aria-label="Rekomendasi CBF">
 
         <div>
@@ -417,7 +398,6 @@
             bukan teks hardcoded per cluster</div>
         </div>
 
-        <!-- CLUSTER FILTER -->
         <div>
           <div class="detail-tabs">
             <button class="dtab active" onclick="switchRecCluster(0,this)">Semua Cluster</button>
@@ -431,9 +411,6 @@
 
       </section>
 
-      <!-- ═══════════════════════════════════════════════════════ -->
-      <!-- PAGE: PERBANDINGAN                                     -->
-      <!-- ═══════════════════════════════════════════════════════ -->
       <section class="page" id="page-perbandingan" aria-label="Perbandingan fitur">
 
         <div>
@@ -573,7 +550,6 @@
           </div>
         </div>
 
-        <!-- EXTENDED FEATURE TABLE -->
         <div class="card">
           <div class="card-header">
             <div>
@@ -683,21 +659,13 @@
 
       </section>
 
-    </div><!-- end .content -->
+    </div>
 
-    <!-- FOOTER -->
     <footer class="dash-footer">
       <div>◆ Wattwise — Energy Efficiency Intelligence Platform · © 2025</div>
-      <div class="footer-tags">
-        <span class="ftag">KMeans K=3</span>
-        <span class="ftag">Content-Based Filtering</span>
-        <span class="ftag">RobustScaler</span>
-        <span class="ftag">Silhouette 0.47</span>
-        <span class="ftag">8.600+ Records</span>
-      </div>
     </footer>
 
-  </div><!-- end .main -->
+  </div>
 
   <script src="./assets/js/main.js"></script>
 </body>

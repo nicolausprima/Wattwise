@@ -1,8 +1,3 @@
-/* ============================================
-   WATTWISE — main.js  (fixed)
-   ============================================ */
-
-/* ── DATA ─────────────────────────────────── */
 const DATA = {
   clusterCounts: [3600, 2800, 2200],
 
@@ -37,7 +32,6 @@ const DATA = {
   }
 };
 
-/* CBF recommendation rules */
 const CBF_RULES = [
   {
     cluster: 0,
@@ -111,7 +105,6 @@ const CBF_RULES = [
   }
 ];
 
-/* Bar chart datasets */
 const BAR_DATA = {
   kwh: {
     label: 'Avg Usage (kWh)',
@@ -130,25 +123,20 @@ const BAR_DATA = {
   }
 };
 
-/* ── CHART INSTANCES ─────────────────────── */
 let radarChart = null;
 let barChart   = null;
 let pieChart   = null;
 
-/* ── PAGE SWITCHING ──────────────────────── */
 window.switchPage = function (pageId, sidebarBtn) {
-  /* pages */
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + pageId);
   if (target) target.classList.add('active');
 
-  /* sidebar buttons */
   if (sidebarBtn) {
     document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
     sidebarBtn.classList.add('active');
   }
 
-  /* sync sidebar active state even when called from nav-tabs */
   const sbMap = { dashboard: 0, segmentasi: 1, rekomendasi: 2, perbandingan: 3 };
   const sbItems = document.querySelectorAll('.sb-nav .sb-item');
   if (sbMap[pageId] !== undefined && sbItems[sbMap[pageId]]) {
@@ -156,7 +144,6 @@ window.switchPage = function (pageId, sidebarBtn) {
     sbItems[sbMap[pageId]].classList.add('active');
   }
 
-  /* lazy-init charts when their page first becomes visible */
   if (pageId === 'segmentasi' && !radarChart) initRadarChart();
   if (pageId === 'perbandingan' && !pieChart) initPieChart();
 };
@@ -166,15 +153,13 @@ window.switchNavTab = function (btn) {
   btn.classList.add('active');
 };
 
-/* ── INIT ────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initBarChart('kwh');
   initDetailContent(0);
-  renderRecGrid(null); /* all clusters */
+  renderRecGrid(null);
   syncNavTabsWithPages();
 });
 
-/* keep nav-tab highlight in sync with sidebar clicks */
 function syncNavTabsWithPages() {
   const order = ['dashboard', 'segmentasi', 'rekomendasi', 'perbandingan'];
   document.querySelectorAll('.sb-nav .sb-item').forEach((btn, i) => {
@@ -186,7 +171,6 @@ function syncNavTabsWithPages() {
   });
 }
 
-/* ── BAR CHART (Dashboard) ───────────────── */
 function initBarChart(type) {
   const ctx = document.getElementById('barMain');
   if (!ctx) return;
@@ -258,7 +242,6 @@ window.switchBarChart = function (type, btn) {
   initBarChart(type);
 };
 
-/* ── RADAR CHART (Segmentasi) ────────────── */
 function initRadarChart() {
   const ctx = document.getElementById('radarChart');
   if (!ctx) return;
@@ -315,7 +298,6 @@ function initRadarChart() {
   });
 }
 
-/* ── PIE CHART (Perbandingan) ────────────── */
 function initPieChart() {
   const ctx = document.getElementById('pieChart');
   if (!ctx) return;
@@ -354,7 +336,6 @@ function initPieChart() {
   });
 }
 
-/* ── DETAIL CLUSTER (Segmentasi tab) ─────── */
 window.switchDetail = function (idx, btn) {
   document.querySelectorAll('.dtab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -414,9 +395,7 @@ function initDetailContent(idx) {
   `;
 }
 
-/* ── REC GRID (Rekomendasi page) ─────────── */
 window.switchRecCluster = function (filterIdx, btn) {
-  /* filterIdx: 0 = semua, 1 = C0, 2 = C1, 3 = C2 */
   document.querySelectorAll('#page-rekomendasi .dtab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 

@@ -250,6 +250,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;
 }
 
 /* ─── SECTION PAGES ─── */
@@ -970,14 +971,7 @@ canvas {
   background: transparent;
 }
 
-<<<<<<< HEAD .main::-webkit-scrollbar-thumb {
+.main::-webkit-scrollbar-thumb {
   background: var(--border-mid);
   border-radius: 4px;
-}
-
-=======.main::-webkit-scrollbar-thumb {
-  background: var(--border-mid);
-  border-radius: 4px;
-}
-
->>>>>>>58d618f (membenarkan modelling)
+}
