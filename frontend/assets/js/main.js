@@ -112,7 +112,7 @@ const BAR_DATA = {
     colors: ['#1D9E75', '#378ADD', '#E24B4A']
   },
   co2: {
-    label: 'Avg CO₂ (tCO₂ × 1000)',
+    label: 'Avg CO₂ (kgCO₂)',
     data: [1.5, 4.1, 13.8],
     colors: ['#1D9E75', '#378ADD', '#E24B4A']
   },

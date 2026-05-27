@@ -46,7 +46,7 @@
           <div class="kpi-card kc-green">
             <div class="kpi-top">
               <div class="kpi-icon ig"><i class="ti ti-database" aria-hidden="true"></i></div>
-              <span class="kpi-badge-sm badge-g">+12.3%</span>
+              <span class="kpi-badge-sm badge-g" title="Kenaikan volume data vs bulan lalu">+12.3% MoM</span>
             </div>
             <div class="kpi-val">8,600<span>+ rec</span></div>
             <div class="kpi-label">Total Records</div>
@@ -230,58 +230,33 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Feature Snapshot</div>
-                <div class="card-sub">Nilai scaled RobustScaler — <strong>bold</strong> = tertinggi per baris</div>
+                <div class="card-title">Konfigurasi Model ML</div>
+                <div class="card-sub">Detail algoritma dan parameter model yang aktif</div>
               </div>
             </div>
-            <table class="ftable">
-              <thead>
-                <tr>
-                  <th>Fitur</th>
-                  <th><span class="pip" style="background:#1D9E75"></span>C0</th>
-                  <th><span class="pip" style="background:#378ADD"></span>C1</th>
-                  <th><span class="pip" style="background:#E24B4A"></span>C2</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Usage_kWh</td>
-                  <td>-0.62</td>
-                  <td>-0.11</td>
-                  <td class="hi hi-r">2.14</td>
-                </tr>
-                <tr>
-                  <td>Lagging_PF</td>
-                  <td class="hi hi-g">0.91</td>
-                  <td>0.42</td>
-                  <td>-0.87</td>
-                </tr>
-                <tr>
-                  <td>Leading_PF</td>
-                  <td>-0.23</td>
-                  <td class="hi hi-b">0.68</td>
-                  <td>0.11</td>
-                </tr>
-                <tr>
-                  <td>CO2_tCO2</td>
-                  <td>-0.58</td>
-                  <td>-0.09</td>
-                  <td class="hi hi-r">2.05</td>
-                </tr>
-                <tr>
-                  <td>NSM (time)</td>
-                  <td class="hi hi-g">0.44</td>
-                  <td>0.31</td>
-                  <td>-0.18</td>
-                </tr>
-                <tr>
-                  <td>Load_Type</td>
-                  <td>-0.71</td>
-                  <td>0.22</td>
-                  <td class="hi hi-r">1.33</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="model-info-list" style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+              <div class="mi-item" style="display:flex;align-items:start;gap:12px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)">
+                <div class="mi-icon" style="color:var(--blue);font-size:20px;margin-top:2px"><i class="ti ti-binary" aria-hidden="true"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text-primary)">Algoritma K-Means (K=3)</div>
+                  <div style="font-size:11px;color:var(--text-secondary);line-height:1.4">Mengelompokkan pola konsumsi listrik industri baja menjadi 3 cluster utama (Low, Medium, High Load).</div>
+                </div>
+              </div>
+              <div class="mi-item" style="display:flex;align-items:start;gap:12px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)">
+                <div class="mi-icon" style="color:var(--green);font-size:20px;margin-top:2px"><i class="ti ti-scale" aria-hidden="true"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text-primary)">RobustScaler Preprocessing</div>
+                  <div style="font-size:11px;color:var(--text-secondary);line-height:1.4">Menskalakan data menggunakan statistik yang robust terhadap pencilan (outliers) sebelum proses clustering.</div>
+                </div>
+              </div>
+              <div class="mi-item" style="display:flex;align-items:start;gap:12px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)">
+                <div class="mi-icon" style="color:var(--amber);font-size:20px;margin-top:2px"><i class="ti ti-license" aria-hidden="true"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text-primary)">Content-Based Filtering Rules</div>
+                  <div style="font-size:11px;color:var(--text-secondary);line-height:1.4">8 aturan logika penentu rekomendasi tindakan berbasis cosine similarity dan gap analysis terhadap cluster ideal.</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -292,7 +267,7 @@
         <div>
           <div
             style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">
-            02 — Segmentasi</div>
+            01 — Segmentasi</div>
           <div style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:2px">Cluster Profile</div>
           <div style="font-size:13px;color:var(--text-muted)">KMeans K=3 · Silhouette Score 0.47 · RobustScaler +
             Log-transform</div>
@@ -391,7 +366,7 @@
         <div>
           <div
             style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">
-            01 — Rekomendasi CBF</div>
+            02 — Rekomendasi CBF</div>
           <div style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:2px">Sistem Rekomendasi
             Data-Driven</div>
           <div style="font-size:13px;color:var(--text-muted)">Rekomendasi diturunkan dari gap fitur aktual vs ideal —

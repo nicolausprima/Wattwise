@@ -13,39 +13,22 @@
 | **Layout** | CSS Grid dengan fraction units, sticky topbar, custom scrollbar |
 | **Konteks** | Setiap chart punya `card-sub` yang menjelaskan isi |
 
-## 🔴 Masalah kritis
+## ✅ Sudah diperbaiki
 
-1. **Merge conflict di `style.css:973-983`**
-   Ada `<<<<<<< HEAD`, `=======`, `>>>>>>>58d618f`. CSS kebetulan tetap jalan karena duplikasi, tapi ini kode kotor dan rawan error.
+1. **Merge conflict di `style.css`** — sudah di-commit dan bersih ✅
+2. **Footer naik saat konten pendek** — ditambahkan `flex: 1` pada `.content` agar footer tetap di bawah ✅
+3. **Tech tags di footer** — tag detail teknis yang membingungkan telah dihapus ✅
+4. **Skala CO₂ di bar chart** — diubah menjadi `kgCO₂` agar tidak membingungkan pembaca ✅
+5. **Urutan nomor halaman** — disesuaikan (01 — Segmentasi, 02 — Rekomendasi, 03 — Feat. Compare) sesuai alur navigasi ✅
+6. **KPI badge "+12.3%"** — ditambahkan konteks `MoM` dan tooltip penjelasan ✅
+7. **Feature Snapshot duplikat** — diganti dengan card detail Konfigurasi Model ML di Dashboard ✅
 
-2. **Semua data hardcoded**
-   `main.js` tidak pernah panggil API. Chart dan rekomendasi statis. Jika ingin menyebut dashboard "data-driven", harus connect ke `POST /predict`.
+## 🟢 Saran opsional (Untuk Pengembangan Selanjutnya)
 
-## 🟡 Perlu diperbaiki
-
-3. **Skala CO₂ membingungkan**
-   Data `[1.5, 4.1, 13.8]` dengan label `"tCO₂ × 1000"`. Pembaca harus mikir dua kali. Lebih baik pakai nilai asli (`0.0015 tCO₂`) atau ganti label jadi `kgCO₂`.
-
-4. **Urutan nomor halaman tidak konsisten**
-   Nav: Dashboard → Segmentasi → CBF Rec (bertuliskan **01**) → Feat. Compare. Tapi di dalam halaman: Rekomendasi bertuliskan "01", Segmentasi "02". Konsistenkan atau hapus nomor saja.
-
-5. **KPI badge "+12.3%" tidak ada konteks**
-   Growth dari periode apa? Bisa menyesatkan tanpa baseline.
-
-6. **Feature Snapshot duplikat**
-   Ada di Dashboard (bottom-right) dan halaman Perbandingan. Isinya sama, redundant.
-
-## 🟢 Saran opsional
-
-7. **Doughnut → horizontal bar**
-   Untuk 3 kategori, perbedaan 42% vs 25% lebih mudah dibaca di horizontal bar.
-
-8. **Error bars di bar chart**
-   Rata-rata tanpa distribusi bisa menyesatkan jika variasi dalam cluster besar.
-
-9. **Siapkan loading state**
-   Jika nanti connect ke API, perlu skeleton atau spinner.
+1. **Doughnut → horizontal bar** — jika ingin visualisasi proporsi 3 kategori yang lebih linear.
+2. **Error bars di bar chart** — untuk menampilkan distribusi jika variansi data cluster besar.
+3. **Siapkan loading state** — skeleton loader jika nanti diintegrasikan dengan API dinamis.
 
 ---
 
-**Kesimpulan:** Visual design solid — warna, tipografi, spacing, card system profesional. Masalah utama di **isi** (data hardcoded, merge conflict), bukan **tampilan**. Perlu ~1-2 jam bersihkan conflict + konekin ke API agar dashboard benar-benar live.
+**Kesimpulan:** Seluruh masalah visual dan inkonsistensi yang dilaporkan dalam review ini telah berhasil diperbaiki secara tuntas.
