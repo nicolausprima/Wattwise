@@ -5,9 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wattwise — Energy Intelligence Dashboard</title>
+  <meta name="description"
+    content="Sistem rekomendasi efisiensi energi berbasis Machine Learning untuk industri baja. Clustering KMeans + Content-Based Filtering." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -16,630 +18,761 @@
 
 <body>
 
+  <!-- ═══════════════════════════════════════════════
+       LANDING PAGE
+  ════════════════════════════════════════════════ -->
+  <div class="landing-overlay" id="landingOverlay">
+    <div class="landing-wrap">
 
-  <div class="main">
-
-    <header class="topbar">
-      <div class="topbar-brand">
-        <span class="dot">◆</span>
-        <h1>Wattwise <span>Steel Industry · Energy Intelligence</span></h1>
+      <!-- Logo -->
+      <div class="landing-logo">
+        <div class="landing-logo-icon">◆</div>
+        <span class="landing-logo-text">Wattwise</span>
+        <span class="landing-demo-badge">Demo</span>
       </div>
-      <div class="topbar-right">
-        <div class="nav-tabs">
-          <button class="nav-tab active" onclick="switchPage('dashboard',null);switchNavTab(this)">Dashboard</button>
-          <button class="nav-tab" onclick="switchPage('segmentasi',null);switchNavTab(this)">Segmentasi</button>
-          <button class="nav-tab" onclick="switchPage('rekomendasi',null);switchNavTab(this)">CBF Rec.</button>
-          <button class="nav-tab" onclick="switchPage('perbandingan',null);switchNavTab(this)">Feat. Compare</button>
-        </div>
-        <div class="tb-chip">
-          <i class="ti ti-database" aria-hidden="true"></i>8,600+ Records
-        </div>
-        <div class="avatar" aria-label="User avatar">W</div>
+
+      <!-- Hero -->
+      <div class="landing-hero">
+        <div class="landing-eyebrow">⚡ Proyek Akhir · Sistem Rekomendasi</div>
+        <h1 class="landing-title">
+          Hemat Energi Lebih Cerdas<br />
+          <span>dengan Machine Learning</span>
+        </h1>
+        <p class="landing-desc">
+          Wattwise menganalisis pola konsumsi listrik industri baja menggunakan
+          <strong>8.600+ data real</strong>, mengelompokkan pola operasional, dan memberikan
+          rekomendasi efisiensi yang spesifik dan terukur.
+        </p>
       </div>
-    </header>
 
-    <div class="content">
-
-      <section class="page active" id="page-dashboard" aria-label="Dashboard overview">
-
-        <div class="kpi-row">
-          <div class="kpi-card kc-green">
-            <div class="kpi-top">
-              <div class="kpi-icon ig"><i class="ti ti-database" aria-hidden="true"></i></div>
-              <span class="kpi-badge-sm badge-g" title="Kenaikan volume data vs bulan lalu">+12.3% MoM</span>
-            </div>
-            <div class="kpi-val">8,600<span>+ rec</span></div>
-            <div class="kpi-label">Total Records</div>
-          </div>
-          <div class="kpi-card kc-blue">
-            <div class="kpi-top">
-              <div class="kpi-icon ib"><i class="ti ti-chart-bubble" aria-hidden="true"></i></div>
-              <span class="kpi-badge-sm badge-b">K = 3</span>
-            </div>
-            <div class="kpi-val">0.47</div>
-            <div class="kpi-label">Silhouette Score</div>
-          </div>
-          <div class="kpi-card kc-amber">
-            <div class="kpi-top">
-              <div class="kpi-icon ia"><i class="ti ti-bolt" aria-hidden="true"></i></div>
-              <span class="kpi-badge-sm badge-a">Avg all</span>
-            </div>
-            <div class="kpi-val">14.2<span> kWh</span></div>
-            <div class="kpi-label">Rata-rata Konsumsi</div>
-          </div>
-          <div class="kpi-card kc-red">
-            <div class="kpi-top">
-              <div class="kpi-icon ir"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
-              <span class="kpi-badge-sm badge-r">Active</span>
-            </div>
-            <div class="kpi-val">8</div>
-            <div class="kpi-label">CBF Rules</div>
+      <!-- How it works — 3 steps -->
+      <div class="landing-steps">
+        <div class="lstep">
+          <div class="lstep-num">01</div>
+          <div class="lstep-icon"><i class="ti ti-database"></i></div>
+          <div class="lstep-title">Kumpulkan Data</div>
+          <div class="lstep-desc">8.600+ record penggunaan energi industri baja — kWh, CO₂, power factor, waktu operasi
           </div>
         </div>
-
-        <div class="grid-3-2">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Usage kWh per Cluster</div>
-                <div class="card-sub">Rata-rata konsumsi per segmen setelah RobustScaler</div>
-              </div>
-              <div class="tab-group">
-                <button class="tg-btn active" onclick="switchBarChart('kwh',this)">Avg kWh</button>
-                <button class="tg-btn" onclick="switchBarChart('co2',this)">CO₂</button>
-                <button class="tg-btn" onclick="switchBarChart('pf',this)">Power Factor</button>
-              </div>
-            </div>
-            <div style="position:relative;width:100%;height:210px">
-              <canvas id="barMain" role="img" aria-label="Bar chart of average kWh usage per cluster"></canvas>
-            </div>
-            <div style="display:flex;gap:16px;margin-top:12px">
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:#1D9E75;display:inline-block"></span>Cluster
-                0 — Low Load · Idle</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:#378ADD;display:inline-block"></span>Cluster
-                1 — Medium · Night</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:#E24B4A;display:inline-block"></span>Cluster
-                2 — High Load · Day</span>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Proporsi Cluster</div>
-                <div class="card-sub">Distribusi record per segmen</div>
-              </div>
-            </div>
-            <div class="cluster-pills">
-              <div class="cpill">
-                <div class="cp-dot" style="background:#1D9E75"></div>
-                <div class="cp-label">Cluster 0 · Low Load</div>
-                <div class="cp-bar-wrap">
-                  <div class="cp-bar" style="width:42%;background:#1D9E75"></div>
-                </div>
-                <div class="cp-pct">42%</div>
-              </div>
-              <div class="cpill">
-                <div class="cp-dot" style="background:#378ADD"></div>
-                <div class="cp-label">Cluster 1 · Medium</div>
-                <div class="cp-bar-wrap">
-                  <div class="cp-bar" style="width:33%;background:#378ADD"></div>
-                </div>
-                <div class="cp-pct">33%</div>
-              </div>
-              <div class="cpill">
-                <div class="cp-dot" style="background:#E24B4A"></div>
-                <div class="cp-label">Cluster 2 · High Load</div>
-                <div class="cp-bar-wrap">
-                  <div class="cp-bar" style="width:25%;background:#E24B4A"></div>
-                </div>
-                <div class="cp-pct">25%</div>
-              </div>
-            </div>
-            <div class="co2-row">
-              <div class="co2-mini" style="background:#EAF3DE">
-                <div class="cm-label" style="color:#3B6D11">C0 — Low</div>
-                <div class="cm-val" style="color:#27500A">0.0015</div>
-                <div class="cm-unit" style="color:#3B6D11">tCO₂</div>
-              </div>
-              <div class="co2-mini" style="background:#E6F1FB">
-                <div class="cm-label" style="color:#185FA5">C1 — Mid</div>
-                <div class="cm-val" style="color:#0C447C">0.0041</div>
-                <div class="cm-unit" style="color:#185FA5">tCO₂</div>
-              </div>
-              <div class="co2-mini" style="background:#FCEBEB">
-                <div class="cm-label" style="color:#A32D2D">C2 — High</div>
-                <div class="cm-val" style="color:#791F1F">0.0138</div>
-                <div class="cm-unit" style="color:#A32D2D">tCO₂</div>
-              </div>
-            </div>
-          </div>
+        <div class="lstep-arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="lstep">
+          <div class="lstep-num">02</div>
+          <div class="lstep-icon"><i class="ti ti-chart-radar"></i></div>
+          <div class="lstep-title">Segmentasi Pola</div>
+          <div class="lstep-desc">Algoritma KMeans mengelompokkan ke 3 tipe operasional: Beban Rendah, Menengah, dan
+            Tinggi</div>
         </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Rule Frequency — CBF</div>
-                <div class="card-sub">Masalah paling umum di test set</div>
-              </div>
-            </div>
-            <div class="rule-bar-list">
-              <div class="rb-item">
-                <div class="rb-label">Power factor di bawah 0.75</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:82%;background:#E24B4A"></div>
-                </div>
-                <div class="rb-count">82%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">Shift beban ke off-peak</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:74%;background:#EF9F27"></div>
-                </div>
-                <div class="rb-count">74%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">CO₂ spike harian tinggi</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:68%;background:#E24B4A"></div>
-                </div>
-                <div class="rb-count">68%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">Reactive power lagging tinggi</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:61%;background:#378ADD"></div>
-                </div>
-                <div class="rb-count">61%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">Beban idle jam malam</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:53%;background:#378ADD"></div>
-                </div>
-                <div class="rb-count">53%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">Leading PF tidak optimal</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:44%;background:#1D9E75"></div>
-                </div>
-                <div class="rb-count">44%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">NSM time gap terlalu besar</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:37%;background:#1D9E75"></div>
-                </div>
-                <div class="rb-count">37%</div>
-              </div>
-              <div class="rb-item">
-                <div class="rb-label">Load type tidak efisien</div>
-                <div class="rb-track">
-                  <div class="rb-fill" style="width:29%;background:#1D9E75"></div>
-                </div>
-                <div class="rb-count">29%</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Konfigurasi Model ML</div>
-                <div class="card-sub">Detail algoritma dan parameter model yang aktif</div>
-              </div>
-            </div>
-            <div class="model-info-list" style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
-              <div class="mi-item" style="display:flex;align-items:start;gap:12px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)">
-                <div class="mi-icon" style="color:var(--blue);font-size:20px;margin-top:2px"><i class="ti ti-binary" aria-hidden="true"></i></div>
-                <div>
-                  <div style="font-size:12px;font-weight:600;color:var(--text-primary)">Algoritma K-Means (K=3)</div>
-                  <div style="font-size:11px;color:var(--text-secondary);line-height:1.4">Mengelompokkan pola konsumsi listrik industri baja menjadi 3 cluster utama (Low, Medium, High Load).</div>
-                </div>
-              </div>
-              <div class="mi-item" style="display:flex;align-items:start;gap:12px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)">
-                <div class="mi-icon" style="color:var(--green);font-size:20px;margin-top:2px"><i class="ti ti-scale" aria-hidden="true"></i></div>
-                <div>
-                  <div style="font-size:12px;font-weight:600;color:var(--text-primary)">RobustScaler Preprocessing</div>
-                  <div style="font-size:11px;color:var(--text-secondary);line-height:1.4">Menskalakan data menggunakan statistik yang robust terhadap pencilan (outliers) sebelum proses clustering.</div>
-                </div>
-              </div>
-              <div class="mi-item" style="display:flex;align-items:start;gap:12px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)">
-                <div class="mi-icon" style="color:var(--amber);font-size:20px;margin-top:2px"><i class="ti ti-license" aria-hidden="true"></i></div>
-                <div>
-                  <div style="font-size:12px;font-weight:600;color:var(--text-primary)">Content-Based Filtering Rules</div>
-                  <div style="font-size:11px;color:var(--text-secondary);line-height:1.4">8 aturan logika penentu rekomendasi tindakan berbasis cosine similarity dan gap analysis terhadap cluster ideal.</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="lstep-arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="lstep">
+          <div class="lstep-num">03</div>
+          <div class="lstep-icon"><i class="ti ti-sparkles"></i></div>
+          <div class="lstep-title">Rekomendasi Aksi</div>
+          <div class="lstep-desc">Content-Based Filtering memberikan saran efisiensi spesifik berdasarkan gap dari
+            profil ideal</div>
         </div>
+      </div>
 
-      </section>
-
-      <section class="page" id="page-segmentasi" aria-label="Segmentasi cluster">
-
-        <div>
-          <div
-            style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">
-            01 — Segmentasi</div>
-          <div style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:2px">Cluster Profile</div>
-          <div style="font-size:13px;color:var(--text-muted)">KMeans K=3 · Silhouette Score 0.47 · RobustScaler +
-            Log-transform</div>
+      <!-- Stats row -->
+      <div class="landing-stats">
+        <div class="lstat">
+          <div class="lstat-val">8,600<span>+</span></div>
+          <div class="lstat-label">Data Record</div>
         </div>
-
-        <div class="seg-grid">
-          <div class="seg-card s0">
-            <span class="seg-badge" style="background:#EAF3DE;color:#3B6D11">Cluster 0</span>
-            <div class="seg-kval">4.2 <span>kWh avg</span></div>
-            <div class="seg-tag">Low Load · Idle State</div>
-            <div class="seg-bar-wrap">
-              <div class="seg-bar" style="width:42%;background:#1D9E75"></div>
-            </div>
-            <div class="seg-pct">42% dari total records</div>
-            <div class="seg-meta" style="margin-top:10px">
-              <span class="seg-chip">CO₂: 0.0015 tCO₂</span>
-              <span class="seg-chip">PF: 86.2%</span>
-              <span class="seg-chip">NSM tinggi</span>
-            </div>
-          </div>
-          <div class="seg-card s1">
-            <span class="seg-badge" style="background:#E6F1FB;color:#185FA5">Cluster 1</span>
-            <div class="seg-kval">9.8 <span>kWh avg</span></div>
-            <div class="seg-tag">Medium Load · Night Shift</div>
-            <div class="seg-bar-wrap">
-              <div class="seg-bar" style="width:33%;background:#378ADD"></div>
-            </div>
-            <div class="seg-pct">33% dari total records</div>
-            <div class="seg-meta" style="margin-top:10px">
-              <span class="seg-chip">CO₂: 0.0041 tCO₂</span>
-              <span class="seg-chip">PF: 72.4%</span>
-              <span class="seg-chip">Leading PF optimal</span>
-            </div>
-          </div>
-          <div class="seg-card s2">
-            <span class="seg-badge" style="background:#FCEBEB;color:#A32D2D">Cluster 2</span>
-            <div class="seg-kval">31.4 <span>kWh avg</span></div>
-            <div class="seg-tag">High Load · Day Shift</div>
-            <div class="seg-bar-wrap">
-              <div class="seg-bar" style="width:25%;background:#E24B4A"></div>
-            </div>
-            <div class="seg-pct">25% dari total records</div>
-            <div class="seg-meta" style="margin-top:10px">
-              <span class="seg-chip">CO₂: 0.0138 tCO₂</span>
-              <span class="seg-chip">PF: 58.1%</span>
-              <span class="seg-chip">Beban puncak</span>
-            </div>
-          </div>
+        <div class="lstat-div"></div>
+        <div class="lstat">
+          <div class="lstat-val">3</div>
+          <div class="lstat-label">Cluster Operasional</div>
         </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Detail Cluster</div>
-                <div class="card-sub">Pilih cluster untuk melihat karakteristik</div>
-              </div>
-            </div>
-            <div class="detail-tabs">
-              <button class="dtab active" onclick="switchDetail(0,this)">Cluster 0</button>
-              <button class="dtab" onclick="switchDetail(1,this)">Cluster 1</button>
-              <button class="dtab" onclick="switchDetail(2,this)">Cluster 2</button>
-            </div>
-            <div id="detailContent"></div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Radar Profil Fitur</div>
-                <div class="card-sub">Semua cluster — nilai rata-rata scaled</div>
-              </div>
-            </div>
-            <div class="radar-wrap">
-              <canvas id="radarChart" role="img"
-                aria-label="Radar chart comparing feature profiles across 3 clusters"></canvas>
-            </div>
-            <div style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap">
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:rgba(29,158,117,0.7);display:inline-block"></span>Cluster
-                0</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:rgba(55,138,221,0.7);display:inline-block"></span>Cluster
-                1</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:rgba(226,75,74,0.7);display:inline-block"></span>Cluster
-                2</span>
-            </div>
-          </div>
+        <div class="lstat-div"></div>
+        <div class="lstat">
+          <div class="lstat-val">10</div>
+          <div class="lstat-label">Rekomendasi Aksi</div>
         </div>
+      </div>
 
-      </section>
+      <!-- CTA -->
+      <button class="landing-cta" id="enterDashboard" onclick="enterDashboard()">
+        <span>Lihat Dashboard</span>
+        <i class="ti ti-arrow-right"></i>
+      </button>
 
-      <section class="page" id="page-rekomendasi" aria-label="Rekomendasi CBF">
-
-        <div>
-          <div
-            style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">
-            02 — Rekomendasi CBF</div>
-          <div style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:2px">Sistem Rekomendasi
-            Data-Driven</div>
-          <div style="font-size:13px;color:var(--text-muted)">Rekomendasi diturunkan dari gap fitur aktual vs ideal —
-            bukan teks hardcoded per cluster</div>
-        </div>
-
-        <div>
-          <div class="detail-tabs">
-            <button class="dtab active" onclick="switchRecCluster(0,this)">Semua Cluster</button>
-            <button class="dtab" onclick="switchRecCluster(1,this)">Cluster 0</button>
-            <button class="dtab" onclick="switchRecCluster(2,this)">Cluster 1</button>
-            <button class="dtab" onclick="switchRecCluster(3,this)">Cluster 2</button>
-          </div>
-        </div>
-
-        <div class="rec-grid" id="recGrid"></div>
-
-      </section>
-
-      <section class="page" id="page-perbandingan" aria-label="Perbandingan fitur">
-
-        <div>
-          <div
-            style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">
-            03 — Feat. Compare</div>
-          <div style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:2px">Feature Comparison
-          </div>
-          <div style="font-size:13px;color:var(--text-muted)">Nilai scaled setelah RobustScaler — kolom tertinggi per
-            baris diberi highlight</div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Tabel Perbandingan Fitur</div>
-                <div class="card-sub">Semua 6 fitur utama setelah scaling</div>
-              </div>
-            </div>
-            <table class="ftable">
-              <thead>
-                <tr>
-                  <th>Fitur</th>
-                  <th><span class="pip" style="background:#1D9E75"></span>Cluster 0</th>
-                  <th><span class="pip" style="background:#378ADD"></span>Cluster 1</th>
-                  <th><span class="pip" style="background:#E24B4A"></span>Cluster 2</th>
-                  <th style="text-align:left;padding-left:10px">Interpretasi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Usage_kWh</td>
-                  <td>-0.62</td>
-                  <td>-0.11</td>
-                  <td class="hi hi-r">2.14</td>
-                  <td
-                    style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                    C2 konsumsi jauh di atas rata-rata</td>
-                </tr>
-                <tr>
-                  <td>Lagging_PF</td>
-                  <td class="hi hi-g">0.91</td>
-                  <td>0.42</td>
-                  <td>-0.87</td>
-                  <td
-                    style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                    C0 lagging PF paling tinggi (baik)</td>
-                </tr>
-                <tr>
-                  <td>Leading_PF</td>
-                  <td>-0.23</td>
-                  <td class="hi hi-b">0.68</td>
-                  <td>0.11</td>
-                  <td
-                    style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                    C1 leading PF paling optimal</td>
-                </tr>
-                <tr>
-                  <td>CO2_tCO2</td>
-                  <td>-0.58</td>
-                  <td>-0.09</td>
-                  <td class="hi hi-r">2.05</td>
-                  <td
-                    style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                    C2 emisi CO₂ tertinggi</td>
-                </tr>
-                <tr>
-                  <td>NSM (time)</td>
-                  <td class="hi hi-g">0.44</td>
-                  <td>0.31</td>
-                  <td>-0.18</td>
-                  <td
-                    style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                    C0 lebih banyak operasi malam/off-peak</td>
-                </tr>
-                <tr>
-                  <td>Load_Type</td>
-                  <td>-0.71</td>
-                  <td>0.22</td>
-                  <td class="hi hi-r">1.33</td>
-                  <td
-                    style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                    C2 dominasi beban berat</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Distribusi Record per Cluster</div>
-                <div class="card-sub">Proporsi berdasarkan jumlah record</div>
-              </div>
-            </div>
-            <div style="position:relative;width:100%;height:200px">
-              <canvas id="pieChart" role="img"
-                aria-label="Pie chart: Cluster 0 42%, Cluster 1 33%, Cluster 2 25%">Cluster 0: 42%, Cluster 1: 33%,
-                Cluster 2: 25%</canvas>
-            </div>
-            <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:#1D9E75;display:inline-block"></span>C0 —
-                42%</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:#378ADD;display:inline-block"></span>C1 —
-                33%</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)"><span
-                  style="width:10px;height:10px;border-radius:2px;background:#E24B4A;display:inline-block"></span>C2 —
-                25%</span>
-            </div>
-
-            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
-              <div class="card-title" style="font-size:13px;margin-bottom:12px">Interpretasi Segmen</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <div style="padding:10px 12px;background:#EAF3DE;border-radius:var(--radius-sm)">
-                  <div style="font-size:12px;font-weight:600;color:#27500A;margin-bottom:3px">Cluster 0 — Baseline Ideal
-                  </div>
-                  <div style="font-size:12px;color:#3B6D11">Konsumsi rendah, PF baik. Jadikan target ideal untuk cluster
-                    lain.</div>
-                </div>
-                <div style="padding:10px 12px;background:#E6F1FB;border-radius:var(--radius-sm)">
-                  <div style="font-size:12px;font-weight:600;color:#0C447C;margin-bottom:3px">Cluster 1 — Potensi
-                    Optimasi</div>
-                  <div style="font-size:12px;color:#185FA5">Medium load. Audit idle malam hari bisa kurangi 15–25%
-                    konsumsi.</div>
-                </div>
-                <div style="padding:10px 12px;background:#FCEBEB;border-radius:var(--radius-sm)">
-                  <div style="font-size:12px;font-weight:600;color:#791F1F;margin-bottom:3px">Cluster 2 — Prioritas
-                    Utama</div>
-                  <div style="font-size:12px;color:#A32D2D">High load, CO₂ tinggi. Perbaikan PF dan load shifting
-                    kritis.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Centroid Values — Raw (Sebelum Scaling)</div>
-              <div class="card-sub">Nilai asli centroid tiap cluster untuk referensi domain</div>
-            </div>
-          </div>
-          <table class="ftable">
-            <thead>
-              <tr>
-                <th>Fitur</th>
-                <th><span class="pip" style="background:#1D9E75"></span>Cluster 0</th>
-                <th><span class="pip" style="background:#378ADD"></span>Cluster 1</th>
-                <th><span class="pip" style="background:#E24B4A"></span>Cluster 2</th>
-                <th style="text-align:left;padding-left:10px">Unit</th>
-                <th style="text-align:left;padding-left:10px">Keterangan</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Usage_kWh</td>
-                <td class="hi hi-g">4.20</td>
-                <td>9.80</td>
-                <td class="hi hi-r">31.40</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  kWh</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Konsumsi energi aktif</td>
-              </tr>
-              <tr>
-                <td>Lagging_kVarh</td>
-                <td>12.30</td>
-                <td>28.10</td>
-                <td class="hi hi-r">94.50</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  kVarh</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Energi reaktif lagging</td>
-              </tr>
-              <tr>
-                <td>Leading_kVarh</td>
-                <td>3.10</td>
-                <td class="hi hi-b">8.70</td>
-                <td>6.20</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  kVarh</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Energi reaktif leading</td>
-              </tr>
-              <tr>
-                <td>CO2_tCO2</td>
-                <td class="hi hi-g">0.0015</td>
-                <td>0.0041</td>
-                <td class="hi hi-r">0.0138</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  tCO₂</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Emisi karbon dioksida</td>
-              </tr>
-              <tr>
-                <td>Lagging_PF (%)</td>
-                <td class="hi hi-g">86.2</td>
-                <td>72.4</td>
-                <td>58.1</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  %</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Power factor lagging</td>
-              </tr>
-              <tr>
-                <td>Leading_PF (%)</td>
-                <td>61.3</td>
-                <td class="hi hi-b">78.9</td>
-                <td>70.2</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  %</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Power factor leading</td>
-              </tr>
-              <tr>
-                <td>NSM</td>
-                <td class="hi hi-g">52840</td>
-                <td>38910</td>
-                <td>31420</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  detik</td>
-                <td
-                  style="text-align:left;padding-left:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-muted)">
-                  Number of Seconds from Midnight</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </section>
+      <div class="landing-footnote">
+        Dataset: Steel Industry Energy Consumption · DAEWOO Steel Co. Ltd, Korea Selatan · 2018
+      </div>
 
     </div>
+  </div>
 
-    <footer class="dash-footer">
-      <div>◆ Wattwise — Energy Efficiency Intelligence Platform · © 2025</div>
-    </footer>
+  <!-- ═══════════════════════════════════════════════
+       MAIN APP
+  ════════════════════════════════════════════════ -->
+  <div class="app-shell" id="appShell" style="display:none">
 
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navigasi utama">
+      <div class="sb-logo" aria-hidden="true">◆</div>
+      <div class="sb-nav">
+        <button class="sb-item active"
+          onclick="switchPage('dashboard',this);switchNavTab(document.querySelectorAll('.nav-tab')[0])"
+          title="Dashboard">
+          <i class="ti ti-layout-dashboard"></i>
+          <span class="sb-label">Dashboard</span>
+        </button>
+        <button class="sb-item"
+          onclick="switchPage('segmentasi',this);switchNavTab(document.querySelectorAll('.nav-tab')[1])"
+          title="Segmentasi">
+          <i class="ti ti-chart-radar"></i>
+          <span class="sb-label">Segmentasi</span>
+        </button>
+        <button class="sb-item"
+          onclick="switchPage('rekomendasi',this);switchNavTab(document.querySelectorAll('.nav-tab')[2])"
+          title="Rekomendasi">
+          <i class="ti ti-sparkles"></i>
+          <span class="sb-label">Rekomendasi</span>
+        </button>
+      </div>
+      <div class="sb-bottom">
+        <div class="sb-divider"></div>
+        <button class="sb-item" title="Tentang Wattwise" id="btnInfo" onclick="openModal()">
+          <i class="ti ti-info-circle"></i>
+          <span class="sb-label">Info</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN AREA -->
+    <div class="main">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-brand" onclick="returnToLanding()" style="cursor: pointer;">
+          <span class="dot">◆</span>
+          <h1>Wattwise <span>Industri Baja · Energy Intelligence</span></h1>
+        </div>
+        <div class="topbar-right">
+
+          <button class="avatar-btn" onclick="openModal()" title="Tentang Wattwise"
+            aria-label="Tentang Wattwise">W</button>
+        </div>
+      </header>
+
+      <!-- CONTENT PAGES -->
+      <div class="content">
+
+        <!-- ── PAGE: DASHBOARD ── -->
+        <section class="page active" id="page-dashboard" aria-label="Dashboard overview">
+
+          <div class="dash-toprow">
+            <div class="section-header">
+              <span class="section-eyebrow">⚡ Wattwise · Industri Baja</span>
+              <div class="section-title">Ringkasan Konsumsi Energi</div>
+              <div class="section-sub">Gambaran umum pola pemakaian listrik, emisi CO₂, dan peluang efisiensi</div>
+            </div>
+
+          </div>
+
+          <!-- KPI Row -->
+          <div class="kpi-row">
+            <div class="kpi-card kc-amber">
+              <div class="kpi-top">
+                <div class="kpi-icon ia"><i class="ti ti-activity" aria-hidden="true"></i></div>
+                <span class="kpi-badge-sm badge-a">Sub-optimal</span>
+              </div>
+              <div class="kpi-val">72.4<span>%</span></div>
+              <div class="kpi-label">Rata-rata Power Factor</div>
+            </div>
+            <div class="kpi-card kc-amber">
+              <div class="kpi-top">
+                <div class="kpi-icon ia"><i class="ti ti-bolt" aria-hidden="true"></i></div>
+                <span class="kpi-badge-sm badge-a">Rata-rata</span>
+              </div>
+              <div class="kpi-val">14.2<span> kWh</span></div>
+              <div class="kpi-label">Konsumsi per Interval (15 menit)</div>
+            </div>
+            <div class="kpi-card kc-red">
+              <div class="kpi-top">
+                <div class="kpi-icon ir"><i class="ti ti-trending-up" aria-hidden="true"></i></div>
+                <span class="kpi-badge-sm badge-r">vs ideal</span>
+              </div>
+              <div class="kpi-val">7.5<span>× lebih</span></div>
+              <div class="kpi-label">Konsumsi Cluster Kritis vs Ideal</div>
+            </div>
+            <div class="kpi-card kc-blue">
+              <div class="kpi-top">
+                <div class="kpi-icon ib"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
+                <span class="kpi-badge-sm badge-b">Aktif</span>
+              </div>
+              <div class="kpi-val">10<span> saran</span></div>
+              <div class="kpi-label">Rekomendasi Efisiensi Tersedia</div>
+            </div>
+            <div class="kpi-card kc-green">
+              <div class="kpi-top">
+                <div class="kpi-icon ig"><i class="ti ti-leaf" aria-hidden="true"></i></div>
+                <span class="kpi-badge-sm badge-g">ESG Fokus</span>
+              </div>
+              <div class="kpi-val">0.0061<span> tCO₂/Jam</span></div>
+              <div class="kpi-label">Rata-rata Jejak Karbon</div>
+            </div>
+          </div>
+
+          <!-- MAIN: chart (wider) + radar -->
+          <div class="grid-dash" style="grid-template-columns: 1fr 1fr;">
+
+            <!-- Chart card -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Konsumsi Energi per Segmen Operasional</div>
+                  <div class="card-sub">Klik tab untuk mengganti metrik yang ditampilkan</div>
+                </div>
+                <div class="tab-group">
+                  <button class="tg-btn active" onclick="switchBarChart('kwh',this)">Energi (kWh)</button>
+                  <button class="tg-btn" onclick="switchBarChart('co2',this)">CO₂</button>
+                  <button class="tg-btn" onclick="switchBarChart('pf',this)">Power Factor</button>
+                </div>
+              </div>
+              <div style="position:relative;width:100%;flex:1;min-height:260px">
+                <canvas id="barMain" role="img" aria-label="Bar chart konsumsi energi per cluster"></canvas>
+              </div>
+              <!-- Stat strip below chart -->
+              <div class="chart-stat-strip">
+                <div class="css-item">
+                  <div class="css-dot" style="background:var(--green)"></div>
+                  <div class="css-cluster">Beban Rendah · Idle</div>
+                  <div class="css-val" style="color:var(--green)">4.2 kWh</div>
+                  <div class="css-co2">0.0015 tCO₂</div>
+                </div>
+                <div class="css-divider"></div>
+                <div class="css-item">
+                  <div class="css-dot" style="background:var(--blue)"></div>
+                  <div class="css-cluster">Beban Menengah · Malam</div>
+                  <div class="css-val" style="color:var(--blue)">9.8 kWh</div>
+                  <div class="css-co2">0.0041 tCO₂</div>
+                </div>
+                <div class="css-divider"></div>
+                <div class="css-item">
+                  <div class="css-dot" style="background:var(--red)"></div>
+                  <div class="css-cluster">Beban Tinggi · Siang</div>
+                  <div class="css-val" style="color:var(--red)">31.4 kWh</div>
+                  <div class="css-co2">0.0138 tCO₂</div>
+                </div>
+                <div class="css-divider"></div>
+                <div class="css-item css-ratio">
+                  <div class="css-cluster">Rasio Kritis</div>
+                  <div class="css-val" style="color:var(--red);font-size:20px">7.5×</div>
+                  <div class="css-co2">lebih boros dari ideal</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Radar Chart: Karakteristik Segmen -->
+            <div class="card" style="flex:1">
+              <div class="card-header">
+                <div class="card-title">Karakteristik Multi-Dimensi Segmen</div>
+                <div class="card-sub">Perbandingan pola energi, emisi CO₂, dan power factor</div>
+              </div>
+              <div style="position:relative; width:100%; height:260px; margin-top: 8px; flex: 1">
+                <canvas id="radarDashChart" role="img" aria-label="Radar chart karakteristik segmen"></canvas>
+              </div>
+              <div style="display:flex;gap:12px;margin-top:16px;justify-content:center;flex-wrap:wrap">
+                <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--green);display:inline-block"></span>C0 Rendah</span>
+                <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--blue);display:inline-block"></span>C1 Menengah</span>
+                <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--red);display:inline-block"></span>C2 Kritis</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Area Chart Row (Full Width) -->
+          <div class="card" style="margin-top: 14px;">
+            <div class="card-header">
+              <div class="card-title">Profil Beban Operasional 24 Jam</div>
+              <div class="card-sub">Tren rata-rata penggunaan energi harian berdasarkan waktu (seluruh data)</div>
+            </div>
+            <div style="position:relative; width:100%; height:280px; margin-top: 8px;">
+              <canvas id="areaChart"></canvas>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ── PAGE: SEGMENTASI ── -->
+        <section class="page" id="page-segmentasi" aria-label="Segmentasi cluster">
+
+          <div class="dash-toprow">
+            <div class="section-header">
+              <span class="section-eyebrow">📊 01 — Segmentasi</span>
+              <div class="section-title">Pengelompokan Pola Operasional</div>
+              <div class="section-sub">Analisis pola konsumsi energi menjadi 3 tipe operasional utama berdasarkan data historis.</div>
+            </div>
+          </div>
+
+          <div class="seg-grid">
+            <!-- Cluster 0 -->
+            <div class="seg-card s0">
+              <div class="seg-card-top">
+                <span class="seg-badge" style="background:#ECFDF5;color:#065F46">Cluster 0</span>
+                <span class="seg-status seg-status-ideal">✓ Baseline Ideal</span>
+              </div>
+              <div class="seg-kval">4.2 <span>kWh avg</span></div>
+              <div class="seg-tag">Low Load · Idle State</div>
+              <!-- Relative energy scale -->
+              <div class="seg-energy-scale">
+                <div class="ses-label">Konsumsi relatif</div>
+                <div class="ses-track">
+                  <div class="ses-fill" style="width:13%;background:var(--green)"></div>
+                </div>
+                <div class="ses-pct">13% dari max</div>
+              </div>
+              <div class="seg-metrics">
+                <div class="sm-item">
+                  <div class="sm-key">Distribusi</div>
+                  <div class="sm-val" style="color:var(--green)">42%</div>
+                </div>
+                <div class="sm-item">
+                  <div class="sm-key">Power Factor</div>
+                  <div class="sm-val">86.2%</div>
+                </div>
+                <div class="sm-item">
+                  <div class="sm-key">CO₂ avg</div>
+                  <div class="sm-val">0.0015 t</div>
+                </div>
+              </div>
+              <div class="seg-meta">
+                <span class="seg-chip">NSM tinggi</span>
+                <span class="seg-chip">Weekend dominan</span>
+              </div>
+            </div>
+            <!-- Cluster 1 -->
+            <div class="seg-card s1">
+              <div class="seg-card-top">
+                <span class="seg-badge" style="background:#EFF6FF;color:#1E40AF">Cluster 1</span>
+                <span class="seg-status seg-status-warn">⚡ Potensi Optimasi</span>
+              </div>
+              <div class="seg-kval">9.8 <span>kWh avg</span></div>
+              <div class="seg-tag">Medium Load · Night Shift</div>
+              <div class="seg-energy-scale">
+                <div class="ses-label">Konsumsi relatif</div>
+                <div class="ses-track">
+                  <div class="ses-fill" style="width:31%;background:var(--blue)"></div>
+                </div>
+                <div class="ses-pct">31% dari max</div>
+              </div>
+              <div class="seg-metrics">
+                <div class="sm-item">
+                  <div class="sm-key">Distribusi</div>
+                  <div class="sm-val" style="color:var(--blue)">33%</div>
+                </div>
+                <div class="sm-item">
+                  <div class="sm-key">Power Factor</div>
+                  <div class="sm-val">72.4%</div>
+                </div>
+                <div class="sm-item">
+                  <div class="sm-key">CO₂ avg</div>
+                  <div class="sm-val">0.0041 t</div>
+                </div>
+              </div>
+              <div class="seg-meta">
+                <span class="seg-chip">Night shift</span>
+                <span class="seg-chip">Leading PF optimal</span>
+              </div>
+            </div>
+            <!-- Cluster 2 -->
+            <div class="seg-card s2">
+              <div class="seg-card-top">
+                <span class="seg-badge" style="background:#FEF2F2;color:#991B1B">Cluster 2</span>
+                <span class="seg-status seg-status-crit">🔴 Prioritas Utama</span>
+              </div>
+              <div class="seg-kval">31.4 <span>kWh avg</span></div>
+              <div class="seg-tag">High Load · Day Shift</div>
+              <div class="seg-energy-scale">
+                <div class="ses-label">Konsumsi relatif</div>
+                <div class="ses-track">
+                  <div class="ses-fill" style="width:100%;background:var(--red)"></div>
+                </div>
+                <div class="ses-pct">100% (tertinggi)</div>
+              </div>
+              <div class="seg-metrics">
+                <div class="sm-item">
+                  <div class="sm-key">Distribusi</div>
+                  <div class="sm-val" style="color:var(--red)">25%</div>
+                </div>
+                <div class="sm-item">
+                  <div class="sm-key">Power Factor</div>
+                  <div class="sm-val" style="color:var(--red)">58.1%</div>
+                </div>
+                <div class="sm-item">
+                  <div class="sm-key">CO₂ avg</div>
+                  <div class="sm-val" style="color:var(--red)">0.0138 t</div>
+                </div>
+              </div>
+              <div class="seg-meta">
+                <span class="seg-chip">Beban puncak siang</span>
+                <span class="seg-chip">PF kritis</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Detail + Right col -->
+          <div class="grid-seg-bottom">
+
+            <!-- Detail Cluster Panel -->
+            <div class="card">
+              <div class="card-header" style="margin-bottom:0">
+                <div>
+                  <div class="card-title">Profil Detail Cluster</div>
+                  <div class="card-sub">Karakteristik lengkap &amp; rekomendasi tindakan per segmen</div>
+                </div>
+              </div>
+              <!-- Tab row: cluster tabs + radar toggle integrated -->
+              <div class="detail-tabs" style="margin-top:14px">
+                <button class="dtab active" onclick="switchDetail(0,this)">
+                  <span class="dtab-dot" style="background:var(--green)"></span>Cluster 0
+                </button>
+                <button class="dtab" onclick="switchDetail(1,this)">
+                  <span class="dtab-dot" style="background:var(--blue)"></span>Cluster 1
+                </button>
+                <button class="dtab" onclick="switchDetail(2,this)">
+                  <span class="dtab-dot" style="background:var(--red)"></span>Cluster 2
+                </button>
+                <div class="dtab-sep"></div>
+                <button class="dtab dtab-radar" onclick="switchDetailView('radar',this)">
+                  <i class="ti ti-radar"></i> Radar Chart
+                </button>
+              </div>
+              <div id="detailContent" style="flex:1"></div>
+              <div id="detailRadar" style="display:none;flex:1;flex-direction:column;gap:10px;padding-top:12px">
+                <div class="radar-wrap" style="flex:1;min-height:280px">
+                  <canvas id="radarChart" role="img"
+                    aria-label="Radar chart comparing feature profiles across 3 clusters"></canvas>
+                </div>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--border)">
+                  <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary)"><span
+                      style="width:10px;height:10px;border-radius:2px;background:var(--green);display:inline-block"></span>Cluster
+                    0 — Low Load</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary)"><span
+                      style="width:10px;height:10px;border-radius:2px;background:var(--blue);display:inline-block"></span>Cluster
+                    1 — Medium</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary)"><span
+                      style="width:10px;height:10px;border-radius:2px;background:var(--red);display:inline-block"></span>Cluster
+                    2 — High Load</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right col: dataset size + waktu operasional (enriched) -->
+            <div class="seg-right-col">
+
+              <!-- Ukuran dataset -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Distribusi Dataset</div>
+                  <div class="card-sub">Proporsi &amp; jumlah record tiap segmen</div>
+                </div>
+                <div class="cluster-record-list">
+                  <div class="cr-item">
+                    <div class="cr-left">
+                      <div class="cr-dot" style="background:var(--green)"></div>
+                      <div>
+                        <div class="cr-name">Cluster 0 — Low Load</div>
+                        <div class="cr-desc">Idle · Weekend dominan · PF 86.2%</div>
+                      </div>
+                    </div>
+                    <div class="cr-count" style="color:var(--green)">3,600<span>rec</span></div>
+                  </div>
+                  <div class="cr-bar-track">
+                    <div class="cr-bar-fill" style="width:42%;background:var(--green)"></div>
+                  </div>
+                  <div class="cr-item">
+                    <div class="cr-left">
+                      <div class="cr-dot" style="background:var(--blue)"></div>
+                      <div>
+                        <div class="cr-name">Cluster 1 — Medium Load</div>
+                        <div class="cr-desc">Night shift · Weekday · PF 72.4%</div>
+                      </div>
+                    </div>
+                    <div class="cr-count" style="color:var(--blue)">2,800<span>rec</span></div>
+                  </div>
+                  <div class="cr-bar-track">
+                    <div class="cr-bar-fill" style="width:33%;background:var(--blue)"></div>
+                  </div>
+                  <div class="cr-item">
+                    <div class="cr-left">
+                      <div class="cr-dot" style="background:var(--red)"></div>
+                      <div>
+                        <div class="cr-name">Cluster 2 — High Load</div>
+                        <div class="cr-desc">Day shift · Puncak produksi · PF 58.1%</div>
+                      </div>
+                    </div>
+                    <div class="cr-count" style="color:var(--red)">2,200<span>rec</span></div>
+                  </div>
+                  <div class="cr-bar-track">
+                    <div class="cr-bar-fill" style="width:25%;background:var(--red)"></div>
+                  </div>
+                </div>
+                <div class="cr-total">
+                  <span>Total dataset</span>
+                  <span class="cr-total-val">8,600 records</span>
+                </div>
+              </div>
+
+              <!-- Pola Waktu Operasional (enriched) -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Pola Waktu Operasional</div>
+                  <div class="card-sub">Distribusi beban per jam &amp; hari</div>
+                </div>
+                <!-- Hourly load heatmap-style bars -->
+                <div class="time-heatmap">
+                  <div class="thm-label">Profil Beban per Jam</div>
+                  <div class="thm-bars" id="thmBars"></div>
+                  <div class="thm-axis">
+                    <span>00</span><span>04</span><span>08</span><span>12</span><span>16</span><span>20</span><span>24</span>
+                  </div>
+                </div>
+                <!-- Key stats -->
+                <div class="time-stat-grid">
+                  <div class="tsitem">
+                    <div class="tsitem-label">Puncak Harian</div>
+                    <div class="tsitem-val">14:00–16:00</div>
+                    <div class="tsitem-sub">Cluster 2 dominan</div>
+                  </div>
+                  <div class="tsitem">
+                    <div class="tsitem-label">Off-Peak Terbaik</div>
+                    <div class="tsitem-val">22:00–05:00</div>
+                    <div class="tsitem-sub">Tarif listrik rendah</div>
+                  </div>
+                  <div class="tsitem">
+                    <div class="tsitem-label">Hari Paling Aktif</div>
+                    <div class="tsitem-val">Rabu &amp; Kamis</div>
+                    <div class="tsitem-sub">Cluster 2 tertinggi</div>
+                  </div>
+                  <div class="tsitem tsitem-ratio">
+                    <div class="tsitem-label">Rasio Weekday/Weekend</div>
+                    <div class="tsitem-val" style="color:var(--red)">3.2×</div>
+                    <div class="tsitem-sub">Potensi load shifting</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ── PAGE: REKOMENDASI ── -->
+        <section class="page" id="page-rekomendasi" aria-label="Rekomendasi Efisiensi">
+
+          <div class="dash-toprow">
+            <div class="section-header">
+              <span class="section-eyebrow">✨ 02 — Rekomendasi Efisiensi</span>
+              <div class="section-title">Saran Aksi Berdasarkan Data</div>
+              <div class="section-sub">Rekomendasi tindakan spesifik untuk meningkatkan efisiensi dan mengurangi pemborosan.</div>
+            </div>
+          </div>
+
+          <!-- Priority summary strip -->
+          <div class="priority-strip">
+            <div class="ps-item ps-critical">
+              <div class="ps-icon"><i class="ti ti-alert-triangle-filled"></i></div>
+              <div class="ps-body">
+                <div class="ps-count">3</div>
+                <div class="ps-label">Kritis</div>
+              </div>
+              <div class="ps-desc">Tindakan segera — Cluster 2</div>
+            </div>
+            <div class="ps-div"></div>
+            <div class="ps-item ps-high">
+              <div class="ps-icon"><i class="ti ti-alert-circle-filled"></i></div>
+              <div class="ps-body">
+                <div class="ps-count">3</div>
+                <div class="ps-label">Tinggi</div>
+              </div>
+              <div class="ps-desc">Optimasi penting — C1 &amp; C2</div>
+            </div>
+            <div class="ps-div"></div>
+            <div class="ps-item ps-medium">
+              <div class="ps-icon"><i class="ti ti-check-circle-filled"></i></div>
+              <div class="ps-body">
+                <div class="ps-count">4</div>
+                <div class="ps-label">Sedang</div>
+              </div>
+              <div class="ps-desc">Peningkatan bertahap — C0 &amp; C1</div>
+            </div>
+            <div class="ps-div"></div>
+            <div class="ps-total">
+              <div class="ps-count">10</div>
+              <div class="ps-label">Total Rekomendasi</div>
+            </div>
+          </div>
+
+          <!-- Problem bars — Context for recommendations -->
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="problems-grid">
+              <div class="problems-bars-col">
+                <div class="card-title" style="margin-bottom:4px">Masalah Energi Paling Sering Ditemukan</div>
+                <div class="card-sub" style="margin-bottom:16px">% data terdeteksi memiliki masalah ini</div>
+                <div class="rule-bar-list">
+                  <div class="rb-item">
+                    <div class="rb-label">🚨 Faktor Daya (Power Factor) di bawah standar PLN</div>
+                    <div class="rb-track">
+                      <div class="rb-fill" style="width:82%;background:var(--red)"></div>
+                    </div>
+                    <div class="rb-count">82%</div>
+                  </div>
+                  <div class="rb-item">
+                    <div class="rb-label">⚡ Potensi Penjadwalan Pengalihan Beban (Load Shifting)</div>
+                    <div class="rb-track">
+                      <div class="rb-fill" style="width:74%;background:var(--amber)"></div>
+                    </div>
+                    <div class="rb-count">74%</div>
+                  </div>
+                  <div class="rb-item">
+                    <div class="rb-label">🚨 Emisi CO₂ harian melonjak tinggi</div>
+                    <div class="rb-track">
+                      <div class="rb-fill" style="width:68%;background:var(--red)"></div>
+                    </div>
+                    <div class="rb-count">68%</div>
+                  </div>
+                  <div class="rb-item">
+                    <div class="rb-label">💡 Daya reaktif berlebih — pemborosan energi</div>
+                    <div class="rb-track">
+                      <div class="rb-fill" style="width:61%;background:var(--green)"></div>
+                    </div>
+                    <div class="rb-count">61%</div>
+                  </div>
+                  <div class="rb-item">
+                    <div class="rb-label">💡 Peralatan menyala di luar jam operasional</div>
+                    <div class="rb-track">
+                      <div class="rb-fill" style="width:53%;background:var(--green)"></div>
+                    </div>
+                    <div class="rb-count">53%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="problems-insight-col">
+                <div class="pi-card pi-red">
+                  <div class="pi-icon">🚨</div>
+                  <div class="pi-num">82%</div>
+                  <div class="pi-label">data memiliki Faktor Daya di bawah standar PLN 85%</div>
+                  <div class="pi-action">→ Prioritas: Instalasi Bank Kapasitor</div>
+                </div>
+                <div class="pi-card pi-amber">
+                  <div class="pi-icon">⚡</div>
+                  <div class="pi-num">74%</div>
+                  <div class="pi-label">beban besar dapat digeser ke tarif jam malam yang lebih murah</div>
+                  <div class="pi-action">→ Prioritas: Penjadwalan Pengalihan Beban</div>
+                </div>
+                <div class="pi-card pi-blue">
+                  <div class="pi-icon">💡</div>
+                  <div class="pi-num">10</div>
+                  <div class="pi-label">rekomendasi aksi spesifik siap diimplementasikan</div>
+                  <div class="pi-action">→ Selesaikan mulai dari prioritas Kritis</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter tabs -->
+          <div class="detail-tabs">
+            <button class="dtab active" onclick="switchRecCluster(0,this)">Semua</button>
+            <button class="dtab" onclick="switchRecCluster(1,this)">
+              <span class="dtab-dot" style="background:var(--green)"></span>Cluster 0
+            </button>
+            <button class="dtab" onclick="switchRecCluster(2,this)">
+              <span class="dtab-dot" style="background:var(--blue)"></span>Cluster 1
+            </button>
+            <button class="dtab" onclick="switchRecCluster(3,this)">
+              <span class="dtab-dot" style="background:var(--red)"></span>Cluster 2
+            </button>
+          </div>
+
+          <div class="rec-grid" id="recGrid"></div>
+
+        </section>
+
+      </div><!-- /.content -->
+
+      <footer class="dash-footer">
+        <div>◆ Wattwise — Energy Efficiency Intelligence Platform · © 2025</div>
+        <div class="footer-tags">
+          <span class="ftag">KMeans K=3</span>
+          <span class="ftag">Silhouette 0.47</span>
+          <span class="ftag">RobustScaler</span>
+          <span class="ftag">CBF Rules</span>
+          <span class="ftag">8,600+ Records</span>
+        </div>
+      </footer>
+
+    </div><!-- /.main -->
+
+  </div><!-- /.app-shell -->
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL: TENTANG WATTWISE
+  ════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-label="Tentang Wattwise">
+      <div class="modal-header">
+        <div class="modal-logo">◆</div>
+        <div>
+          <div class="modal-title">Tentang Wattwise</div>
+          <div class="modal-sub">Energy Intelligence Dashboard</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Tutup modal">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-label">🎯 Tujuan Sistem</div>
+          <p>Wattwise adalah platform analitik energi berbasis Machine Learning yang dirancang untuk membantu industri
+            mengidentifikasi pemborosan listrik dan mendapatkan rekomendasi efisiensi yang spesifik, terukur, dan dapat
+            langsung dieksekusi.</p>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">📊 Dataset</div>
+          <div class="modal-info-grid">
+            <div class="mig-item">
+              <div class="mig-label">Sumber</div>
+              <div class="mig-val">DAEWOO Steel Co. Ltd, Korea Selatan</div>
+            </div>
+            <div class="mig-item">
+              <div class="mig-label">Periode</div>
+              <div class="mig-val">Januari – Desember 2018</div>
+            </div>
+            <div class="mig-item">
+              <div class="mig-label">Total Record</div>
+              <div class="mig-val">8,600+ data point</div>
+            </div>
+            <div class="mig-item">
+              <div class="mig-label">Interval</div>
+              <div class="mig-val">15 menit per record</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">🤖 Teknologi ML</div>
+          <div class="modal-tech-row">
+            <span class="modal-tech-chip">KMeans Clustering (K=3)</span>
+            <span class="modal-tech-chip">Content-Based Filtering</span>
+            <span class="modal-tech-chip">RobustScaler</span>
+            <span class="modal-tech-chip">Cosine Similarity</span>
+            <span class="modal-tech-chip">Gap Analysis</span>
+            <span class="modal-tech-chip">Flask API</span>
+          </div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">👨‍💻 Dibuat oleh</div>
+          <p style="font-weight:600;color:var(--text-primary)">Nicolaus Prima</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Proyek Akhir · Semester 4 · Sistem
+            Rekomendasi</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn-primary" onclick="closeModal()">Tutup</button>
+      </div>
+    </div>
   </div>
 
   <script src="./assets/js/main.js"></script>
