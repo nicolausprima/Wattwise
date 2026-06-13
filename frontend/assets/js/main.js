@@ -244,7 +244,101 @@ window.closeModalOutside = function (e) {
 };
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    closeModal();
+    if(typeof closePredictModal === 'function') closePredictModal();
+  }
+});
+
+/* ══════════════════════════════════════════════════════
+   PREDICT MODAL & FETCH LOGIC
+══════════════════════════════════════════════════════ */
+window.openPredictModal = function () {
+  const overlay = document.getElementById('predictModalOverlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closePredictModal = function () {
+  const overlay = document.getElementById('predictModalOverlay');
+  overlay.style.animation = 'fadeIn 0.18s ease reverse';
+  setTimeout(() => {
+    overlay.classList.remove('open');
+    overlay.style.animation = '';
+    document.body.style.overflow = '';
+  }, 160);
+};
+
+window.closePredictModalOutside = function (e) {
+  if (e.target === document.getElementById('predictModalOverlay')) {
+    closePredictModal();
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('predictForm');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('predictSubmitBtn');
+      const resultDiv = document.getElementById('predictResult');
+      const originalBtnText = btn.innerHTML;
+      
+      btn.innerHTML = '<span>Memproses ML...</span> <i class="ti ti-loader" style="animation: spin 1s linear infinite"></i>';
+      btn.disabled = true;
+      resultDiv.style.display = 'none';
+
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = parseFloat(value) || 0;
+      });
+
+      try {
+        const response = await fetch('http://localhost:5000/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const res = await response.json();
+        
+        if (res.status === 'success') {
+          let rulesHtml = '';
+          if (res.rules_applied && res.rules_applied.length > 0) {
+            rulesHtml = '<ul style="margin: 10px 0 0 20px; font-size: 13px; color: var(--text-secondary);">';
+            res.rules_applied.forEach(r => {
+              rulesHtml += `<li><b>${r.feature}</b> (Prioritas: ${r.priority})</li>`;
+            });
+            rulesHtml += '</ul>';
+          } else {
+            rulesHtml = '<p style="font-size: 13px; color: var(--text-muted);">Tidak ada rekomendasi khusus.</p>';
+          }
+
+          resultDiv.innerHTML = `
+            <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 8px;">
+              <div style="background:var(--green); color:white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">BERHASIL</div>
+              <div style="font-size: 16px; font-weight: bold; color: var(--text-primary);">Hasil Prediksi: ${res.cluster_name}</div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">ID Cluster: ${res.cluster_id}</div>
+            <div style="font-weight: 600; font-size: 14px; color: var(--text-primary);">Rekomendasi Tindakan:</div>
+            ${rulesHtml}
+          `;
+        } else {
+          resultDiv.innerHTML = `<div style="color: var(--red); font-weight: bold;">Error: ${res.message}</div>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<div style="color: var(--red); font-weight: bold;">Koneksi gagal. Pastikan API backend berjalan di localhost:5000.</div>`;
+      } finally {
+        btn.innerHTML = originalBtnText;
+        btn.disabled = false;
+        resultDiv.style.display = 'block';
+      }
+    });
+  }
 });
 
 /* ══════════════════════════════════════════════════════

@@ -150,7 +150,9 @@
           <h1>Wattwise <span>Industri Baja · Energy Intelligence</span></h1>
         </div>
         <div class="topbar-right">
-
+          <button class="live-predict-btn" onclick="openPredictModal()">
+            <i class="ti ti-bolt"></i> Cek Prediksi Live
+          </button>
           <button class="avatar-btn" onclick="openModal()" title="Tentang Wattwise"
             aria-label="Tentang Wattwise">W</button>
         </div>
@@ -764,6 +766,52 @@
       </div>
       <div class="modal-footer">
         <button class="modal-btn-primary" onclick="closeModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL: PREDIKSI LIVE
+  ════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="predictModalOverlay" onclick="closePredictModalOutside(event)">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-label="Prediksi Live" style="max-width: 600px;">
+      <div class="modal-header">
+        <div class="modal-logo" style="background:var(--blue);color:white">⚡</div>
+        <div>
+          <div class="modal-title">Cek Prediksi Energi</div>
+          <div class="modal-sub">Masukkan parameter operasional untuk mendapatkan rekomendasi dari ML backend</div>
+        </div>
+        <button class="modal-close" onclick="closePredictModal()" aria-label="Tutup modal">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-top: 16px; padding-bottom: 24px;">
+        <form id="predictForm" class="predict-form">
+          <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group"><label>Usage (kWh)</label><input type="number" step="any" name="Usage_kWh" required placeholder="e.g. 5.5"></div>
+            <div class="form-group"><label>Lagging Reactive (kVarh)</label><input type="number" step="any" name="Lagging_Current_Reactive.Power_kVarh" required placeholder="e.g. 2.1"></div>
+            <div class="form-group"><label>Leading Reactive (kVarh)</label><input type="number" step="any" name="Leading_Current_Reactive_Power_kVarh" required placeholder="e.g. 0.0"></div>
+            <div class="form-group"><label>CO2 (tCO2)</label><input type="number" step="any" name="CO2(tCO2)" required placeholder="e.g. 0.002"></div>
+            <div class="form-group"><label>Lagging PF (%)</label><input type="number" step="any" name="Lagging_Current_Power_Factor" required placeholder="e.g. 85.0"></div>
+            <div class="form-group"><label>Leading PF (%)</label><input type="number" step="any" name="Leading_Current_Power_Factor" required placeholder="e.g. 100.0"></div>
+            <div class="form-group"><label>NSM (detik)</label><input type="number" step="any" name="NSM" required placeholder="e.g. 900"></div>
+            <div class="form-group"><label>Jam (0-23)</label><input type="number" name="hour" required min="0" max="23" placeholder="e.g. 14"></div>
+            <div class="form-group"><label>Bulan (1-12)</label><input type="number" name="month" required min="1" max="12" placeholder="e.g. 6"></div>
+            <div class="form-group"><label>Weekend?</label>
+              <select name="is_weekend" required style="padding:8px 12px; border-radius:6px; border:1px solid var(--border-mid); width:100%; font-family:'DM Mono';">
+                <option value="0">Tidak (Weekday)</option>
+                <option value="1">Ya (Weekend)</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="modal-btn-primary" style="width: 100%; margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 8px;" id="predictSubmitBtn">
+            <span>Analisis Data</span> <i class="ti ti-arrow-right"></i>
+          </button>
+        </form>
+        
+        <div id="predictResult" class="predict-result" style="display: none; margin-top: 20px; border-top: 1px dashed var(--border-mid); padding-top: 20px;">
+          <!-- Result will be injected here -->
+        </div>
       </div>
     </div>
   </div>
