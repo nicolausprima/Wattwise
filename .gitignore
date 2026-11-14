@@ -21,3 +21,9 @@ ENV/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Temporary & Tool files
+*.zip
+.commandcode/
+.impeccable/
+scratch/
